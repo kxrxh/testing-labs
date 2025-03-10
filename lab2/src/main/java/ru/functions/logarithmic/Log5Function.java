@@ -6,22 +6,26 @@ package ru.functions.logarithmic;
  */
 public class Log5Function implements LogarithmicFunction {
     private final LnFunction lnFunction;
-    private final LogarithmicFunction log5Function;
+    private static final double LN_5 = 1.6094379124341003; // ln(5)
 
     public Log5Function(LnFunction lnFunction) {
         this.lnFunction = lnFunction;
-        // Use the changeBase method from LnFunction to create a logarithm with base 5
-        this.log5Function = lnFunction.changeBase(5.0);
     }
 
     @Override
     public double calculate(double x, double epsilon) throws IllegalArgumentException {
-        return log5Function.calculate(x, epsilon);
+        if (!isInDomain(x)) {
+            throw new IllegalArgumentException("Input value " + x + " is outside the domain of log base 5");
+        }
+
+        // log_5(x) = ln(x) / ln(5)
+        // Using the precomputed value of ln(5) for efficiency
+        return lnFunction.calculate(x, epsilon * LN_5) / LN_5;
     }
 
     @Override
     public boolean isInDomain(double x) {
-        return log5Function.isInDomain(x);
+        return lnFunction.isInDomain(x);
     }
 
     @Override

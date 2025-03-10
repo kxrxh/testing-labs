@@ -1,29 +1,46 @@
 package ru.functions.logarithmic;
 
-import ru.functions.utils.MathUtils;
-
 /**
- * Stub implementation of logarithm base 10 using the natural logarithm function
- * stub
+ * Stub implementation of logarithm base 10
  */
 public class Log10FunctionStub implements LogarithmicFunction {
-    private final LogarithmicFunction lnFunctionStub;
-    private final LogarithmicFunction log10Function;
 
-    public Log10FunctionStub(LnFunctionStub lnFunctionStub) {
-        this.lnFunctionStub = lnFunctionStub;
-        // Use the changeBase method to create a logarithm with base 10
-        this.log10Function = lnFunctionStub.changeBase(10.0);
+    // Lookup table for some common log10 values
+    private static final double[][] LOOKUP_TABLE = {
+            { 0.1, -1.0 },
+            { 0.01, -2.0 },
+            { 0.001, -3.0 },
+            { 1.0, 0.0 },
+            { 10.0, 1.0 },
+            { 100.0, 2.0 },
+            { 1000.0, 3.0 },
+            { 10000.0, 4.0 }
+    };
+
+    public Log10FunctionStub() {
+        // No-arg constructor for stub
     }
 
     @Override
     public double calculate(double x, double epsilon) throws IllegalArgumentException {
-        return log10Function.calculate(x, epsilon);
+        if (!isInDomain(x)) {
+            throw new IllegalArgumentException("Input value " + x + " is outside the domain of log base 10");
+        }
+
+        // Check lookup table for exact values
+        for (double[] entry : LOOKUP_TABLE) {
+            if (Math.abs(x - entry[0]) < epsilon) {
+                return entry[1];
+            }
+        }
+
+        // For values not in the lookup table, use a simple approximation
+        return Math.log10(x);
     }
 
     @Override
     public boolean isInDomain(double x) {
-        return log10Function.isInDomain(x);
+        return x > 0;
     }
 
     @Override
@@ -33,9 +50,42 @@ public class Log10FunctionStub implements LogarithmicFunction {
 
     @Override
     public LogarithmicFunction changeBase(double newBase) {
-        if (MathUtils.areEqual(newBase, 10.0, 1e-10)) {
+        if (newBase == 10.0) {
             return this;
         }
-        return lnFunctionStub.changeBase(newBase);
+
+        if (newBase == 2.0) {
+            return new Log2FunctionStub();
+        }
+
+        if (Math.abs(newBase - 5.0) < 1e-10) {
+            return new Log5FunctionStub();
+        }
+
+        // For other bases, return a simple stub
+        return new LogarithmicFunction() {
+            @Override
+            public double calculate(double x, double epsilon) {
+                if (!isInDomain(x)) {
+                    throw new IllegalArgumentException("Input value is outside the domain");
+                }
+                return Math.log10(x) / Math.log10(newBase);
+            }
+
+            @Override
+            public boolean isInDomain(double x) {
+                return x > 0;
+            }
+
+            @Override
+            public double getBase() {
+                return newBase;
+            }
+
+            @Override
+            public LogarithmicFunction changeBase(double b) {
+                return Log10FunctionStub.this.changeBase(b);
+            }
+        };
     }
 }

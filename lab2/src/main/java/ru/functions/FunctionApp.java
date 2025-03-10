@@ -114,7 +114,7 @@ public class FunctionApp {
         String fileName = scanner.nextLine();
 
         try {
-            csvWriter.writeToFile(function, fileName, start, end, step, epsilon);
+            csvWriter.writeFunction(function, start, end, step, fileName);
             System.out.println("CSV file generated successfully: " + fileName);
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e.getMessage());

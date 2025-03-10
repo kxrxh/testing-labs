@@ -46,6 +46,15 @@ public class CosFunction implements TrigonometricFunction {
     }
 
     /**
+     * Gets the sine function that this cosine function depends on
+     *
+     * @return the sine function
+     */
+    public SinFunction getSinFunction() {
+        return sinFunction;
+    }
+
+    /**
      * Helper class to represent a negated trigonometric function
      */
     private static class NegatedTrigonometricFunction implements TrigonometricFunction {

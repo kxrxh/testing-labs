@@ -3,10 +3,10 @@ package ru.functions.trigonometric;
 import ru.functions.utils.MathUtils;
 
 /**
- * Stub implementation of cosecant function using the sine function stub
+ * Stub implementation of cosecant function
  */
 public class CscFunctionStub implements TrigonometricFunction {
-    private final TrigonometricFunction sinFunctionStub;
+    private final SinFunctionStub sinFunctionStub;
 
     public CscFunctionStub(SinFunctionStub sinFunctionStub) {
         this.sinFunctionStub = sinFunctionStub;
@@ -21,8 +21,8 @@ public class CscFunctionStub implements TrigonometricFunction {
         double sinValue = sinFunctionStub.calculate(x, epsilon);
 
         // Prevent division by zero
-        if (MathUtils.isZero(sinValue, epsilon)) {
-            throw new IllegalArgumentException("Cosecant is undefined at x = " + x + " (sin(x) = 0)");
+        if (Math.abs(sinValue) < epsilon) {
+            throw new IllegalArgumentException("Cosecant is undefined for x = " + x + " (sin(x) = 0)");
         }
 
         // csc(x) = 1/sin(x)
@@ -32,74 +32,29 @@ public class CscFunctionStub implements TrigonometricFunction {
     @Override
     public boolean isInDomain(double x) {
         // csc(x) is defined for all x where sin(x) != 0
-        // sin(x) = 0 when x = nπ for integer n
-        return !MathUtils.isCloseToMultipleOfHalfPi(x, 1e-10) ||
-                !MathUtils.isCloseToMultipleOfHalfPi(x - MathUtils.PI, 1e-10);
+        // sin(x) = 0 at x = nπ
+
+        // Normalize angle to [0, 2π) range for easier checking
+        double normalizedX = MathUtils.normalizeAngle(x);
+
+        // Check if x is close to 0 or π (where sin(x) = 0)
+        return !(MathUtils.isClose(normalizedX, 0.0, 1e-10) ||
+                MathUtils.isClose(normalizedX, MathUtils.PI, 1e-10));
     }
 
     @Override
     public double getPeriod() {
-        return sinFunctionStub.getPeriod();
+        return MathUtils.TWO_PI; // Same as sine
     }
 
     @Override
     public int getParity() {
-        return sinFunctionStub.getParity(); // csc(x) has the same parity as sin(x) (odd)
+        return 1; // Odd: csc(-x) = -csc(x)
     }
 
     @Override
     public TrigonometricFunction getDerivative() {
         // The derivative of csc(x) is -csc(x) * cot(x)
-        return new NegatedCscCotProduct(this, sinFunctionStub);
-    }
-
-    /**
-     * Helper class to represent -csc(x) * cot(x) for the derivative of cosecant
-     */
-    private static class NegatedCscCotProduct implements TrigonometricFunction {
-        private final TrigonometricFunction cscFunction;
-        private final TrigonometricFunction sinFunction;
-
-        public NegatedCscCotProduct(TrigonometricFunction cscFunction, TrigonometricFunction sinFunction) {
-            this.cscFunction = cscFunction;
-            this.sinFunction = sinFunction;
-        }
-
-        @Override
-        public double calculate(double x, double epsilon) throws IllegalArgumentException {
-            if (!isInDomain(x)) {
-                throw new IllegalArgumentException("Input value is outside the domain of -csc(x)*cot(x)");
-            }
-
-            double csc = cscFunction.calculate(x, epsilon);
-            double sin = sinFunction.calculate(x, epsilon);
-            double cos = sinFunction.calculate(x + MathUtils.HALF_PI, epsilon); // cos(x) = sin(x + π/2)
-
-            // cot(x) = cos(x) / sin(x)
-            double cot = cos / sin;
-
-            return -csc * cot;
-        }
-
-        @Override
-        public boolean isInDomain(double x) {
-            return cscFunction.isInDomain(x);
-        }
-
-        @Override
-        public double getPeriod() {
-            return MathUtils.PI;
-        }
-
-        @Override
-        public int getParity() {
-            return 0; // -csc(x)*cot(x) is even
-        }
-
-        @Override
-        public TrigonometricFunction getDerivative() {
-            // The derivative is complex and not implemented
-            return null;
-        }
+        return null; // Simplified for stub
     }
 }

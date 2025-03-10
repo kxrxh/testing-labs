@@ -7,7 +7,7 @@ import ru.functions.utils.MathUtils;
  * csc(x) = 1/sin(x)
  */
 public class CscFunction implements TrigonometricFunction {
-    private final TrigonometricFunction sinFunction;
+    private final SinFunction sinFunction;
 
     public CscFunction(SinFunction sinFunction) {
         this.sinFunction = sinFunction;
@@ -58,10 +58,10 @@ public class CscFunction implements TrigonometricFunction {
      * Helper class to represent -csc(x) * cot(x) for the derivative of cosecant
      */
     private static class NegatedCscCotProduct implements TrigonometricFunction {
-        private final TrigonometricFunction cscFunction;
-        private final TrigonometricFunction sinFunction;
+        private final CscFunction cscFunction;
+        private final SinFunction sinFunction;
 
-        public NegatedCscCotProduct(TrigonometricFunction cscFunction, TrigonometricFunction sinFunction) {
+        public NegatedCscCotProduct(CscFunction cscFunction, SinFunction sinFunction) {
             this.cscFunction = cscFunction;
             this.sinFunction = sinFunction;
         }
@@ -74,6 +74,8 @@ public class CscFunction implements TrigonometricFunction {
 
             double csc = cscFunction.calculate(x, epsilon);
             double sin = sinFunction.calculate(x, epsilon);
+
+            // Get the cos function using sin(x + π/2)
             double cos = sinFunction.calculate(x + MathUtils.HALF_PI, epsilon); // cos(x) = sin(x + π/2)
 
             // cot(x) = cos(x) / sin(x)

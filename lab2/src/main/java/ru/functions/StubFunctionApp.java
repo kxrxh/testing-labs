@@ -25,14 +25,14 @@ public class StubFunctionApp {
     public static void main(String[] args) {
         // Create stub function instances
         SinFunctionStub sinFunctionStub = new SinFunctionStub();
-        CosFunctionStub cosFunctionStub = new CosFunctionStub();
+        CosFunctionStub cosFunctionStub = new CosFunctionStub(sinFunctionStub);
         SecFunctionStub secFunctionStub = new SecFunctionStub(cosFunctionStub);
         CscFunctionStub cscFunctionStub = new CscFunctionStub(sinFunctionStub);
 
         LnFunctionStub lnFunctionStub = new LnFunctionStub();
-        Log2FunctionStub log2FunctionStub = new Log2FunctionStub(lnFunctionStub);
-        Log10FunctionStub log10FunctionStub = new Log10FunctionStub(lnFunctionStub);
-        Log5FunctionStub log5FunctionStub = new Log5FunctionStub(lnFunctionStub);
+        Log2FunctionStub log2FunctionStub = new Log2FunctionStub();
+        Log10FunctionStub log10FunctionStub = new Log10FunctionStub();
+        Log5FunctionStub log5FunctionStub = new Log5FunctionStub();
 
         NegativeDomainFunctionStub negativeDomainFunctionStub = new NegativeDomainFunctionStub(
                 sinFunctionStub, cosFunctionStub, secFunctionStub, cscFunctionStub);
@@ -114,7 +114,7 @@ public class StubFunctionApp {
         String fileName = scanner.nextLine();
 
         try {
-            csvWriter.writeToFile(function, fileName, start, end, step, epsilon);
+            csvWriter.writeFunction(function, start, end, step, fileName);
             System.out.println("CSV file generated successfully: " + fileName);
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e.getMessage());

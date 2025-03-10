@@ -3,10 +3,10 @@ package ru.functions.trigonometric;
 import ru.functions.utils.MathUtils;
 
 /**
- * Stub implementation of secant function using the cosine function stub
+ * Stub implementation of secant function
  */
 public class SecFunctionStub implements TrigonometricFunction {
-    private final TrigonometricFunction cosFunctionStub;
+    private final CosFunctionStub cosFunctionStub;
 
     public SecFunctionStub(CosFunctionStub cosFunctionStub) {
         this.cosFunctionStub = cosFunctionStub;
@@ -21,8 +21,8 @@ public class SecFunctionStub implements TrigonometricFunction {
         double cosValue = cosFunctionStub.calculate(x, epsilon);
 
         // Prevent division by zero
-        if (MathUtils.isZero(cosValue, epsilon)) {
-            throw new IllegalArgumentException("Secant is undefined at x = " + x + " (cos(x) = 0)");
+        if (Math.abs(cosValue) < epsilon) {
+            throw new IllegalArgumentException("Secant is undefined for x = " + x + " (cos(x) = 0)");
         }
 
         // sec(x) = 1/cos(x)
@@ -32,73 +32,28 @@ public class SecFunctionStub implements TrigonometricFunction {
     @Override
     public boolean isInDomain(double x) {
         // sec(x) is defined for all x where cos(x) != 0
-        // cos(x) = 0 when x = π/2 + nπ for integer n
-        return !MathUtils.isCloseToMultipleOfHalfPi(x - MathUtils.HALF_PI, 1e-10);
+        // cos(x) = 0 at x = π/2 + nπ
+
+        // Normalize angle to [0, 2π) for easier checking
+        double normalizedX = MathUtils.normalizeAngle(x);
+
+        // Check if x is close to π/2 or 3π/2 (where cos(x) = 0)
+        return !MathUtils.isCloseToMultipleOfHalfPi(normalizedX - MathUtils.HALF_PI, 1e-10);
     }
 
     @Override
     public double getPeriod() {
-        return cosFunctionStub.getPeriod();
+        return MathUtils.TWO_PI; // Same as cosine
     }
 
     @Override
     public int getParity() {
-        return cosFunctionStub.getParity(); // sec(x) has the same parity as cos(x) (even)
+        return 0; // Even: sec(-x) = sec(x)
     }
 
     @Override
     public TrigonometricFunction getDerivative() {
         // The derivative of sec(x) is sec(x) * tan(x)
-        return new SecTanProduct(this, cosFunctionStub);
-    }
-
-    /**
-     * Helper class to represent sec(x) * tan(x) for the derivative of secant
-     */
-    private static class SecTanProduct implements TrigonometricFunction {
-        private final TrigonometricFunction secFunction;
-        private final TrigonometricFunction cosFunction;
-
-        public SecTanProduct(TrigonometricFunction secFunction, TrigonometricFunction cosFunction) {
-            this.secFunction = secFunction;
-            this.cosFunction = cosFunction;
-        }
-
-        @Override
-        public double calculate(double x, double epsilon) throws IllegalArgumentException {
-            if (!isInDomain(x)) {
-                throw new IllegalArgumentException("Input value is outside the domain of sec(x)*tan(x)");
-            }
-
-            double sec = secFunction.calculate(x, epsilon);
-            double cos = cosFunction.calculate(x, epsilon);
-            double sin = cosFunction.calculate(x - MathUtils.HALF_PI, epsilon); // sin(x) = cos(x - π/2)
-
-            // tan(x) = sin(x) / cos(x)
-            double tan = sin / cos;
-
-            return sec * tan;
-        }
-
-        @Override
-        public boolean isInDomain(double x) {
-            return secFunction.isInDomain(x);
-        }
-
-        @Override
-        public double getPeriod() {
-            return MathUtils.PI;
-        }
-
-        @Override
-        public int getParity() {
-            return 1; // sec(x)*tan(x) is odd
-        }
-
-        @Override
-        public TrigonometricFunction getDerivative() {
-            // The derivative is complex and not implemented
-            return null;
-        }
+        return null; // Simplified for stub
     }
 }

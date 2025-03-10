@@ -7,7 +7,7 @@ import ru.functions.utils.MathUtils;
  * sec(x) = 1/cos(x)
  */
 public class SecFunction implements TrigonometricFunction {
-    private final TrigonometricFunction cosFunction;
+    private final CosFunction cosFunction;
 
     public SecFunction(CosFunction cosFunction) {
         this.cosFunction = cosFunction;
@@ -57,10 +57,10 @@ public class SecFunction implements TrigonometricFunction {
      * Helper class to represent sec(x) * tan(x) for the derivative of secant
      */
     private static class SecTanProduct implements TrigonometricFunction {
-        private final TrigonometricFunction secFunction;
-        private final TrigonometricFunction cosFunction;
+        private final SecFunction secFunction;
+        private final CosFunction cosFunction;
 
-        public SecTanProduct(TrigonometricFunction secFunction, TrigonometricFunction cosFunction) {
+        public SecTanProduct(SecFunction secFunction, CosFunction cosFunction) {
             this.secFunction = secFunction;
             this.cosFunction = cosFunction;
         }
@@ -73,7 +73,10 @@ public class SecFunction implements TrigonometricFunction {
 
             double sec = secFunction.calculate(x, epsilon);
             double cos = cosFunction.calculate(x, epsilon);
-            double sin = cosFunction.calculate(x - MathUtils.HALF_PI, epsilon); // sin(x) = cos(x - π/2)
+
+            // Get the sin function from cos's dependency
+            SinFunction sinFunction = cosFunction.getSinFunction();
+            double sin = sinFunction.calculate(x, epsilon);
 
             // tan(x) = sin(x) / cos(x)
             double tan = sin / cos;

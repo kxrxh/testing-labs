@@ -3,43 +3,62 @@ package ru.functions.system;
 import ru.functions.utils.Function;
 
 /**
- * Interface representing a composite system function that combines multiple
- * sub-functions
- * with different domains
+ * Interface for a system function composed of multiple sub-functions
  */
 public interface SystemFunctionInterface extends Function {
 
     /**
-     * Returns the number of sub-functions in the system
+     * Gets the number of sub-functions in the system
      *
      * @return the number of sub-functions
      */
     int getSubFunctionCount();
 
     /**
-     * Determines which sub-function applies to the given input
+     * Gets the index of the sub-function applicable for a given input value
      *
      * @param x the input value
-     * @return the index of the applicable sub-function, or -1 if x is outside the
-     *         domain
+     * @return the index of the applicable sub-function, or -1 if no sub-function is
+     *         applicable
      */
     int getApplicableSubFunction(double x);
 
     /**
-     * Gets the domain description for a specific sub-function
+     * Gets the domain description for a sub-function
      *
      * @param subFunctionIndex the index of the sub-function
-     * @return a string description of the domain (e.g., "x ≤ 0", "x > 0")
-     * @throws IndexOutOfBoundsException if the index is invalid
+     * @return a string describing the domain of the sub-function
+     * @throws IndexOutOfBoundsException if the sub-function index is out of range
      */
     String getSubFunctionDomain(int subFunctionIndex) throws IndexOutOfBoundsException;
 
     /**
-     * Gets the formula description for a specific sub-function
+     * Gets the formula description for a sub-function
      *
      * @param subFunctionIndex the index of the sub-function
-     * @return a string representation of the formula
-     * @throws IndexOutOfBoundsException if the index is invalid
+     * @return a string representing the formula of the sub-function
+     * @throws IndexOutOfBoundsException if the sub-function index is out of range
      */
     String getSubFunctionFormula(int subFunctionIndex) throws IndexOutOfBoundsException;
+
+    /**
+     * Gets the negative domain function component
+     *
+     * @return the negative domain function
+     */
+    Function getNegativeDomainFunction();
+
+    /**
+     * Gets the positive domain function component
+     *
+     * @return the positive domain function
+     */
+    Function getPositiveDomainFunction();
+
+    /**
+     * Checks if the implementation uses stub functions
+     *
+     * @return true if the implementation uses stub functions, false otherwise
+     */
+    boolean isUsingStubs();
 }

@@ -1,6 +1,7 @@
 package ru.functions.system;
 
 import ru.functions.utils.MathUtils;
+import ru.functions.utils.Function;
 
 /**
  * Stub implementation of the main system function that combines both domains:
@@ -9,8 +10,8 @@ import ru.functions.utils.MathUtils;
  * log_5(x))
  */
 public class SystemFunctionStub implements SystemFunctionInterface {
-    private final NegativeDomainFunctionStub negativeDomainFunctionStub;
-    private final PositiveDomainFunctionStub positiveDomainFunctionStub;
+    private final Function negativeDomainFunctionStub;
+    private final Function positiveDomainFunctionStub;
 
     // Domain and formula descriptions
     private static final String[] DOMAIN_DESCRIPTIONS = {
@@ -24,8 +25,8 @@ public class SystemFunctionStub implements SystemFunctionInterface {
     };
 
     public SystemFunctionStub(
-            NegativeDomainFunctionStub negativeDomainFunctionStub,
-            PositiveDomainFunctionStub positiveDomainFunctionStub) {
+            Function negativeDomainFunctionStub,
+            Function positiveDomainFunctionStub) {
         this.negativeDomainFunctionStub = negativeDomainFunctionStub;
         this.positiveDomainFunctionStub = positiveDomainFunctionStub;
     }
@@ -90,5 +91,20 @@ public class SystemFunctionStub implements SystemFunctionInterface {
         }
 
         return FORMULA_DESCRIPTIONS[subFunctionIndex];
+    }
+
+    @Override
+    public Function getNegativeDomainFunction() {
+        return negativeDomainFunctionStub;
+    }
+
+    @Override
+    public Function getPositiveDomainFunction() {
+        return positiveDomainFunctionStub;
+    }
+
+    @Override
+    public boolean isUsingStubs() {
+        return true; // This is a stub implementation
     }
 }

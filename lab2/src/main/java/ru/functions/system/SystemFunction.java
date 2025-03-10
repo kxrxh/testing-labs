@@ -1,5 +1,6 @@
 package ru.functions.system;
 
+import ru.functions.utils.Function;
 import ru.functions.utils.MathUtils;
 
 /**
@@ -9,8 +10,8 @@ import ru.functions.utils.MathUtils;
  * log_5(x))
  */
 public class SystemFunction implements SystemFunctionInterface {
-    private final NegativeDomainFunction negativeDomainFunction;
-    private final PositiveDomainFunction positiveDomainFunction;
+    private final Function negativeDomainFunction;
+    private final Function positiveDomainFunction;
 
     // Domain and formula descriptions
     private static final String[] DOMAIN_DESCRIPTIONS = {
@@ -23,11 +24,34 @@ public class SystemFunction implements SystemFunctionInterface {
             "(((((log_2(x) + log_10(x)) ^ 2) - log_2(x)) - log_10(x)) - log_5(x))"
     };
 
+    // Constructor that accepts any Function implementations for both domain
+    // functions
+    public SystemFunction(
+            Function negativeDomainFunction,
+            Function positiveDomainFunction) {
+        this.negativeDomainFunction = negativeDomainFunction;
+        this.positiveDomainFunction = positiveDomainFunction;
+    }
+
+    // Constructor for backward compatibility with existing code
     public SystemFunction(
             NegativeDomainFunction negativeDomainFunction,
             PositiveDomainFunction positiveDomainFunction) {
-        this.negativeDomainFunction = negativeDomainFunction;
-        this.positiveDomainFunction = positiveDomainFunction;
+        this((Function) negativeDomainFunction, (Function) positiveDomainFunction);
+    }
+
+    // Constructor for mixed real and stub implementations
+    public SystemFunction(
+            NegativeDomainFunction negativeDomainFunction,
+            PositiveDomainFunctionStub positiveDomainFunctionStub) {
+        this((Function) negativeDomainFunction, (Function) positiveDomainFunctionStub);
+    }
+
+    // Constructor for mixed stub and real implementations
+    public SystemFunction(
+            NegativeDomainFunctionStub negativeDomainFunctionStub,
+            PositiveDomainFunction positiveDomainFunction) {
+        this((Function) negativeDomainFunctionStub, (Function) positiveDomainFunction);
     }
 
     @Override
@@ -90,5 +114,20 @@ public class SystemFunction implements SystemFunctionInterface {
         }
 
         return FORMULA_DESCRIPTIONS[subFunctionIndex];
+    }
+
+    @Override
+    public Function getNegativeDomainFunction() {
+        return negativeDomainFunction;
+    }
+
+    @Override
+    public Function getPositiveDomainFunction() {
+        return positiveDomainFunction;
+    }
+
+    @Override
+    public boolean isUsingStubs() {
+        return false; // This is the real implementation, not a stub
     }
 }

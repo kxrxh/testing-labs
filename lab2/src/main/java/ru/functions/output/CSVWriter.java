@@ -1,62 +1,105 @@
 package ru.functions.output;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Objects;
 
 import ru.functions.utils.Function;
+import ru.functions.system.SystemFunctionInterface;
 
 /**
- * Utility class for writing function values to CSV files
+ * A utility class for writing function values to CSV files
  */
 public class CSVWriter {
-    private final String delimiter;
+    private final String separator;
+    private static final String DEFAULT_SEPARATOR = ",";
+    private static final String HEADER_FORMAT = "X%sF(X)";
 
     /**
-     * Creates a new CSV writer with the specified delimiter
-     *
-     * @param delimiter The delimiter to use in CSV files (e.g., ",", ";", "\t")
+     * Creates a CSVWriter with the default separator (,)
      */
-    public CSVWriter(String delimiter) {
-        this.delimiter = delimiter;
+    public CSVWriter() {
+        this(DEFAULT_SEPARATOR);
     }
 
     /**
-     * Writes function values to a CSV file in the format "X, Function(X)"
+     * Creates a CSVWriter with the specified separator
      *
-     * @param function The function to evaluate
-     * @param fileName The output file name
-     * @param start    The starting x value
-     * @param end      The ending x value
-     * @param step     The step size
-     * @param epsilon  The precision for function evaluation
-     * @throws IOException If an I/O error occurs
+     * @param separator the CSV field separator
      */
-    public void writeToFile(
-            Function function,
-            String fileName,
-            double start,
-            double end,
-            double step,
-            double epsilon) throws IOException {
+    public CSVWriter(String separator) {
+        this.separator = separator;
+    }
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+    /**
+     * Writes function values to a CSV file for the given range of input values
+     *
+     * @param function the function to evaluate
+     * @param start    the start of the input range
+     * @param end      the end of the input range (inclusive)
+     * @param step     the step size between input values
+     * @param filePath the path of the output file
+     * @throws IOException              if an I/O error occurs
+     * @throws IllegalArgumentException if the range parameters are invalid
+     * @throws NullPointerException     if the function or filePath is null
+     */
+    public void writeFunction(Function function, double start, double end, double step, String filePath)
+            throws IOException, IllegalArgumentException, NullPointerException {
+        // Validate parameters
+        Objects.requireNonNull(function, "Function cannot be null");
+        Objects.requireNonNull(filePath, "File path cannot be null");
+
+        if (start > end) {
+            throw new IllegalArgumentException("Start value must be less than or equal to end value");
+        }
+
+        if (step <= 0) {
+            throw new IllegalArgumentException("Step size must be positive");
+        }
+
+        // Write to file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Write header
-            writer.println("X" + delimiter + "Function(X)");
+            writer.write(String.format(HEADER_FORMAT, separator));
+            writer.newLine();
 
-            // Write data points
-            for (double x = start; x <= end; x += step) {
+            // Write function values
+            double x = start;
+            double epsilon = 1e-6; // Default precision
+
+            while (x <= end) {
                 try {
                     if (function.isInDomain(x)) {
                         double y = function.calculate(x, epsilon);
-                        writer.println(x + delimiter + y);
-                    } else {
-                        writer.println(x + delimiter + "undefined");
+                        writer.write(x + separator + y);
+                        writer.newLine();
                     }
                 } catch (IllegalArgumentException e) {
-                    writer.println(x + delimiter + "error: " + e.getMessage());
+                    // Skip points outside the domain or where function is undefined
                 }
+
+                x += step;
             }
         }
+    }
+
+    /**
+     * Writes system function values to a CSV file for the given range of input
+     * values
+     *
+     * @param systemFunction the system function to evaluate
+     * @param start          the start of the input range
+     * @param end            the end of the input range (inclusive)
+     * @param step           the step size between input values
+     * @param filePath       the path of the output file
+     * @throws IOException              if an I/O error occurs
+     * @throws IllegalArgumentException if the range parameters are invalid
+     * @throws NullPointerException     if the function or filePath is null
+     */
+    public void writeFunction(SystemFunctionInterface systemFunction, double start, double end, double step,
+            String filePath)
+            throws IOException, IllegalArgumentException, NullPointerException {
+        writeFunction((Function) systemFunction, start, end, step, filePath);
     }
 }
