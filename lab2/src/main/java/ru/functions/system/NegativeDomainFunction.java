@@ -1,10 +1,9 @@
 package ru.functions.system;
 
-import ru.functions.trigonometric.CosFunction;
-import ru.functions.trigonometric.CscFunction;
-import ru.functions.trigonometric.SecFunction;
-import ru.functions.trigonometric.SinFunction;
-import ru.functions.trigonometric.TrigonometricFunction;
+import ru.functions.trigonometric.cos.CosFunctionInterface;
+import ru.functions.trigonometric.csc.CscFunctionInterface;
+import ru.functions.trigonometric.sec.SecFunctionInterface;
+import ru.functions.trigonometric.sin.SinFunctionInterface;
 import ru.functions.utils.Function;
 
 /**
@@ -12,16 +11,16 @@ import ru.functions.utils.Function;
  * sec(x)) ^ 2) - sin(x))
  */
 public class NegativeDomainFunction implements Function {
-    private final TrigonometricFunction sinFunction;
-    private final TrigonometricFunction cosFunction;
-    private final TrigonometricFunction secFunction;
-    private final TrigonometricFunction cscFunction;
+    private final SinFunctionInterface sinFunction;
+    private final CosFunctionInterface cosFunction;
+    private final SecFunctionInterface secFunction;
+    private final CscFunctionInterface cscFunction;
 
     public NegativeDomainFunction(
-            SinFunction sinFunction,
-            CosFunction cosFunction,
-            SecFunction secFunction,
-            CscFunction cscFunction) {
+            SinFunctionInterface sinFunction,
+            CosFunctionInterface cosFunction,
+            SecFunctionInterface secFunction,
+            CscFunctionInterface cscFunction) {
         this.sinFunction = sinFunction;
         this.cosFunction = cosFunction;
         this.secFunction = secFunction;

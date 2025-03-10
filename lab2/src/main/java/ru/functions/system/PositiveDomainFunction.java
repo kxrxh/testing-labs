@@ -1,9 +1,8 @@
 package ru.functions.system;
 
-import ru.functions.logarithmic.Log10Function;
-import ru.functions.logarithmic.Log2Function;
-import ru.functions.logarithmic.Log5Function;
-import ru.functions.logarithmic.LogarithmicFunction;
+import ru.functions.logarithmic.log10.Log10FunctionInterface;
+import ru.functions.logarithmic.log2.Log2FunctionInterface;
+import ru.functions.logarithmic.log5.Log5FunctionInterface;
 import ru.functions.utils.Function;
 
 /**
@@ -11,14 +10,14 @@ import ru.functions.utils.Function;
  * log_2(x)) - log_10(x)) - log_5(x))
  */
 public class PositiveDomainFunction implements Function {
-    private final LogarithmicFunction log2Function;
-    private final LogarithmicFunction log10Function;
-    private final LogarithmicFunction log5Function;
+    private final Log2FunctionInterface log2Function;
+    private final Log10FunctionInterface log10Function;
+    private final Log5FunctionInterface log5Function;
 
     public PositiveDomainFunction(
-            Log2Function log2Function,
-            Log10Function log10Function,
-            Log5Function log5Function) {
+            Log2FunctionInterface log2Function,
+            Log10FunctionInterface log10Function,
+            Log5FunctionInterface log5Function) {
         this.log2Function = log2Function;
         this.log10Function = log10Function;
         this.log5Function = log5Function;

@@ -1,11 +1,11 @@
-package ru.functions.trigonometric;
+package ru.functions.trigonometric.sec;
 
 import ru.functions.utils.Function;
 
 /**
- * Interface representing a trigonometric function
+ * Interface for secant function and related functions in the sec package
  */
-public interface TrigonometricFunction extends Function {
+public interface SecFunctionInterface extends Function {
     /**
      * Gets the period of the trigonometric function
      *
@@ -39,5 +39,5 @@ public interface TrigonometricFunction extends Function {
      *
      * @return the derivative function
      */
-    TrigonometricFunction getDerivative();
+    SecFunctionInterface getDerivative();
 }

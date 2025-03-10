@@ -1,17 +1,17 @@
 package ru.functions;
 
-import ru.functions.logarithmic.LnFunctionStub;
-import ru.functions.logarithmic.Log10FunctionStub;
-import ru.functions.logarithmic.Log2FunctionStub;
-import ru.functions.logarithmic.Log5FunctionStub;
+import ru.functions.logarithmic.ln.LnFunctionStub;
+import ru.functions.logarithmic.log10.Log10FunctionStub;
+import ru.functions.logarithmic.log2.Log2FunctionStub;
+import ru.functions.logarithmic.log5.Log5FunctionStub;
 import ru.functions.output.CSVWriter;
 import ru.functions.system.NegativeDomainFunctionStub;
 import ru.functions.system.PositiveDomainFunctionStub;
 import ru.functions.system.SystemFunctionStub;
-import ru.functions.trigonometric.CosFunctionStub;
-import ru.functions.trigonometric.CscFunctionStub;
-import ru.functions.trigonometric.SecFunctionStub;
-import ru.functions.trigonometric.SinFunctionStub;
+import ru.functions.trigonometric.cos.CosFunctionStub;
+import ru.functions.trigonometric.csc.CscFunctionStub;
+import ru.functions.trigonometric.sec.SecFunctionStub;
+import ru.functions.trigonometric.sin.SinFunctionStub;
 import ru.functions.utils.Function;
 
 import java.io.IOException;

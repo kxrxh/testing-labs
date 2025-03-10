@@ -1,10 +1,9 @@
 package ru.functions.system;
 
-import ru.functions.trigonometric.CosFunctionStub;
-import ru.functions.trigonometric.CscFunctionStub;
-import ru.functions.trigonometric.SecFunctionStub;
-import ru.functions.trigonometric.SinFunctionStub;
-import ru.functions.trigonometric.TrigonometricFunction;
+import ru.functions.trigonometric.cos.CosFunctionInterface;
+import ru.functions.trigonometric.csc.CscFunctionInterface;
+import ru.functions.trigonometric.sec.SecFunctionInterface;
+import ru.functions.trigonometric.sin.SinFunctionInterface;
 import ru.functions.utils.Function;
 
 /**
@@ -12,16 +11,16 @@ import ru.functions.utils.Function;
  * cos(x)) - sec(x)) ^ 2) - sin(x))
  */
 public class NegativeDomainFunctionStub implements Function {
-    private final TrigonometricFunction sinFunctionStub;
-    private final TrigonometricFunction cosFunctionStub;
-    private final TrigonometricFunction secFunctionStub;
-    private final TrigonometricFunction cscFunctionStub;
+    private final SinFunctionInterface sinFunctionStub;
+    private final CosFunctionInterface cosFunctionStub;
+    private final SecFunctionInterface secFunctionStub;
+    private final CscFunctionInterface cscFunctionStub;
 
     public NegativeDomainFunctionStub(
-            SinFunctionStub sinFunctionStub,
-            CosFunctionStub cosFunctionStub,
-            SecFunctionStub secFunctionStub,
-            CscFunctionStub cscFunctionStub) {
+            SinFunctionInterface sinFunctionStub,
+            CosFunctionInterface cosFunctionStub,
+            SecFunctionInterface secFunctionStub,
+            CscFunctionInterface cscFunctionStub) {
         this.sinFunctionStub = sinFunctionStub;
         this.cosFunctionStub = cosFunctionStub;
         this.secFunctionStub = secFunctionStub;

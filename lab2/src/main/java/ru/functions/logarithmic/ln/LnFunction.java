@@ -1,11 +1,11 @@
-package ru.functions.logarithmic;
+package ru.functions.logarithmic.ln;
 
 import ru.functions.utils.MathUtils;
 
 /**
  * Implementation of natural logarithm function using Taylor series expansion
  */
-public class LnFunction implements LogarithmicFunction {
+public class LnFunction implements LnFunctionInterface {
 
     // Base of natural logarithm (e)
     private static final double E = 2.718281828459045;
@@ -70,7 +70,7 @@ public class LnFunction implements LogarithmicFunction {
     }
 
     @Override
-    public LogarithmicFunction changeBase(double newBase) {
+    public LnFunctionInterface changeBase(double newBase) {
         if (newBase <= 0 || newBase == 1) {
             throw new IllegalArgumentException("Logarithm base must be positive and not equal to 1");
         }
@@ -86,12 +86,12 @@ public class LnFunction implements LogarithmicFunction {
     /**
      * Helper class to represent a logarithm with a different base
      */
-    private static class LogarithmWithBase implements LogarithmicFunction {
-        private final LogarithmicFunction baseLogFunction;
+    private static class LogarithmWithBase implements LnFunctionInterface {
+        private final LnFunctionInterface baseLogFunction;
         private final double base;
         private final double baseLogarithm; // ln(base)
 
-        public LogarithmWithBase(LogarithmicFunction baseLogFunction, double base) {
+        public LogarithmWithBase(LnFunctionInterface baseLogFunction, double base) {
             this.baseLogFunction = baseLogFunction;
             this.base = base;
             this.baseLogarithm = baseLogFunction.calculate(base, 1e-15);
@@ -115,7 +115,7 @@ public class LnFunction implements LogarithmicFunction {
         }
 
         @Override
-        public LogarithmicFunction changeBase(double newBase) {
+        public LnFunctionInterface changeBase(double newBase) {
             if (MathUtils.areEqual(newBase, base, 1e-10)) {
                 return this;
             }

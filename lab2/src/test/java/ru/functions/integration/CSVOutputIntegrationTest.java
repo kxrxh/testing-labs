@@ -6,19 +6,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import ru.functions.logarithmic.LnFunction;
-import ru.functions.logarithmic.Log10Function;
-import ru.functions.logarithmic.Log2Function;
-import ru.functions.logarithmic.Log5Function;
+import ru.functions.logarithmic.ln.LnFunction;
+import ru.functions.logarithmic.log10.Log10Function;
+import ru.functions.logarithmic.log2.Log2Function;
+import ru.functions.logarithmic.log5.Log5Function;
 import ru.functions.output.CSVWriter;
 import ru.functions.system.NegativeDomainFunction;
 import ru.functions.system.PositiveDomainFunction;
 import ru.functions.system.SystemFunction;
 import ru.functions.system.SystemFunctionInterface;
-import ru.functions.trigonometric.CosFunction;
-import ru.functions.trigonometric.CscFunction;
-import ru.functions.trigonometric.SecFunction;
-import ru.functions.trigonometric.SinFunction;
+import ru.functions.trigonometric.cos.CosFunction;
+import ru.functions.trigonometric.csc.CscFunction;
+import ru.functions.trigonometric.sec.SecFunction;
+import ru.functions.trigonometric.sin.SinFunction;
 
 import java.io.BufferedReader;
 import java.io.File;

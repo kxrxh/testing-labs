@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import ru.functions.trigonometric.sin.SinFunction;
 import ru.functions.utils.MathUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -68,18 +69,17 @@ class SinFunctionTest {
     void testSinDomain() {
         // Sin is defined for all real numbers
         double[] testValues = {
-                Double.NEGATIVE_INFINITY, -1000, -10, -MathUtils.PI, -1, 0, 1,
-                MathUtils.PI, 10, 1000, Double.POSITIVE_INFINITY
+                -1000, -10, -MathUtils.PI, -1, 0, 1,
+                MathUtils.PI, 10, 1000
         };
 
         for (double x : testValues) {
-            if (Double.isInfinite(x)) {
-                assertThrows(IllegalArgumentException.class, () -> sinFunction.calculate(x, EPSILON),
-                        "Sin should throw exception for " + x);
-            } else {
-                assertTrue(sinFunction.isInDomain(x), "Sin should be defined for " + x);
-            }
+            assertTrue(sinFunction.isInDomain(x), "Sin should be defined for " + x);
         }
+
+        // Test that infinity is not in the domain
+        assertFalse(sinFunction.isInDomain(Double.POSITIVE_INFINITY));
+        assertFalse(sinFunction.isInDomain(Double.NEGATIVE_INFINITY));
     }
 
     @Test
