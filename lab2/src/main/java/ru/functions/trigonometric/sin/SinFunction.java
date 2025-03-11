@@ -17,17 +17,27 @@ public class SinFunction implements SinFunctionInterface {
         // Normalize x to [-PI, PI] to improve convergence
         x = MathUtils.normalizeAngle(x);
 
+        // For large inputs, we need more terms in the series for accuracy
+        double adjustedEpsilon = epsilon;
+        if (Math.abs(x) > 100) {
+            adjustedEpsilon = epsilon / 100; // Increase precision for large values
+        }
+
         double result = 0.0;
         double term = x;
         int n = 1;
 
         // Taylor series for sin(x): x - x^3/3! + x^5/5! - x^7/7! + ...
-        while (Math.abs(term) > epsilon) {
+        while (Math.abs(term) > adjustedEpsilon) {
             result += term;
 
             // Calculate next term
             term = -term * x * x / ((2 * n) * (2 * n + 1));
             n++;
+
+            // Prevent infinite loops for very large values
+            if (n > 100)
+                break;
         }
 
         return result;

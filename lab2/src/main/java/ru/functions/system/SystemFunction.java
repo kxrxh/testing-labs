@@ -73,11 +73,19 @@ public class SystemFunction implements SystemFunctionInterface {
         // The system function is defined in the union of both domains,
         // excluding x = 0 and x = -π/2, -π, -3π/2, ...
 
-        if (MathUtils.isZero(x, 1e-10)) {
-            return false; // x = 0 is not in the domain
+        // Exactly zero is not in the domain
+        if (x == 0.0) {
+            return false;
         }
 
-        if (x <= 0) {
+        // For values very close to zero, be careful
+        if (Math.abs(x) < 1e-10) {
+            // Allow very small negative values but not very small positive ones
+            // as these might cause numerical issues with logarithms
+            return x < 0;
+        }
+
+        if (x < 0) {
             return negativeDomainFunction.isInDomain(x);
         } else {
             return positiveDomainFunction.isInDomain(x);

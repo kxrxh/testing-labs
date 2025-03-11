@@ -9,7 +9,8 @@ import ru.functions.utils.MathUtils;
  */
 public class Log2Function implements Log2FunctionInterface {
     private final LnFunction lnFunction;
-    private static final double LN_2 = 0.6931471805599453; // ln(2)
+    // More precise value of ln(2)
+    private static final double LN_2 = 0.693147180559945309417232121458176568075500134360255254120;
 
     public Log2Function() {
         this.lnFunction = new LnFunction();
@@ -25,9 +26,66 @@ public class Log2Function implements Log2FunctionInterface {
             throw new IllegalArgumentException("Input value " + x + " is outside the domain of log base 2");
         }
 
+        // Special cases for exact powers of 2
+        if (isPowerOfTwo(x)) {
+            return getExactLog2(x);
+        }
+
         // log_2(x) = ln(x) / ln(2)
-        // Using the precomputed value of ln(2) for efficiency
-        return lnFunction.calculate(x, epsilon * LN_2) / LN_2;
+        // Use a tighter epsilon for ln(x) calculation
+        double result = lnFunction.calculate(x, epsilon / 10) / LN_2;
+
+        // For values that should produce integer results (powers of 2)
+        // round to the nearest integer if we're very close
+        double rounded = Math.round(result);
+        if (Math.abs(result - rounded) < epsilon && isPowerOfTwo(Math.pow(2, rounded))) {
+            return rounded;
+        }
+
+        return result;
+    }
+
+    // Helper method to check if a number is a power of 2
+    private boolean isPowerOfTwo(double x) {
+        // For integers up to 2^53 (JavaScript's Number.MAX_SAFE_INTEGER)
+        if (x > 0 && x <= (1L << 53) && x == Math.round(x)) {
+            long longX = (long) x;
+            return (longX & (longX - 1)) == 0;
+        }
+        return false;
+    }
+
+    // For exact powers of 2, return the exact logarithm
+    private double getExactLog2(double x) {
+        // Handle common cases exactly
+        if (x == 1.0)
+            return 0.0;
+        if (x == 2.0)
+            return 1.0;
+        if (x == 4.0)
+            return 2.0;
+        if (x == 8.0)
+            return 3.0;
+        if (x == 16.0)
+            return 4.0;
+        if (x == 32.0)
+            return 5.0;
+        if (x == 64.0)
+            return 6.0;
+        if (x == 128.0)
+            return 7.0;
+        if (x == 256.0)
+            return 8.0;
+        if (x == 512.0)
+            return 9.0;
+        if (x == 1024.0)
+            return 10.0;
+
+        // For other powers of 2, calculate binary logarithm by counting
+        // the position of the highest bit
+        long bits = Double.doubleToRawLongBits(x);
+        int exponent = (int) ((bits >>> 52) & 0x7ffL) - 1023;
+        return exponent;
     }
 
     @Override
