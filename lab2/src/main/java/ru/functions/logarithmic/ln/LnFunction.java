@@ -25,6 +25,47 @@ public class LnFunction implements LnFunctionInterface {
             return 0.0;
         }
 
+        // For very large values, use logarithm identities to improve accuracy
+        if (x > 1e6) {
+            // Use ln(a*10^n) = ln(a) + n*ln(10) for better numerical stability
+            int exponent = (int) Math.floor(Math.log10(x));
+            double mantissa = x / Math.pow(10, exponent);
+
+            // Calculate ln(mantissa) using the standard method
+            double lnMantissa;
+            if (mantissa > 0.5 && mantissa < 1.5) {
+                // For mantissa close to 1, use Taylor series for ln(1+y)
+                double y = mantissa - 1.0;
+                lnMantissa = 0.0;
+                double term = y;
+                int n = 1;
+
+                // Taylor series for ln(1+y): y - y^2/2 + y^3/3 - y^4/4 + ...
+                while (Math.abs(term) > epsilon / 10) {
+                    lnMantissa += term;
+                    n++;
+                    term = -term * y * (n - 1) / n;
+                }
+            } else {
+                // For other values, use the identity ln(x) = 2*artanh((x-1)/(x+1))
+                double y = (mantissa - 1.0) / (mantissa + 1.0);
+                lnMantissa = 0.0;
+                double term = y;
+                int n = 0;
+
+                // Taylor series for artanh(y): y + y^3/3 + y^5/5 + ...
+                while (Math.abs(term) > epsilon / 20) {
+                    lnMantissa += term;
+                    n++;
+                    term = term * y * y * (2 * n - 1) / (2 * n + 1);
+                }
+                lnMantissa = 2.0 * lnMantissa;
+            }
+
+            // ln(10) ≈ 2.302585092994046
+            return lnMantissa + exponent * 2.302585092994046;
+        }
+
         if (x > 0.5 && x < 1.5) {
             // For x close to 1, use Taylor series for ln(1+y) where y = x-1
             double y = x - 1.0;

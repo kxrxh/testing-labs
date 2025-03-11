@@ -38,9 +38,24 @@ public class SecFunction implements SecFunctionInterface {
     public boolean isInDomain(double x) {
         // Sec(x) is defined for all x where cos(x) ≠ 0
         // This means x ≠ (2n+1)π/2 for integer n
+
+        // Normalize x to [-π, π] for easier checking
         double normalizedX = MathUtils.normalizeAngle(x);
-        return Math.abs(Math.abs(normalizedX) - MathUtils.HALF_PI) > 1e-10 &&
-                Math.abs(Math.abs(normalizedX) - 3 * MathUtils.HALF_PI) > 1e-10;
+        double tolerance = 1e-10;
+
+        // Check if x is close to π/2 or -π/2
+        if (Math.abs(Math.abs(normalizedX) - MathUtils.HALF_PI) < tolerance) {
+            return false;
+        }
+
+        // Additional safety check: calculate cos(x) and see if it's close to zero
+        try {
+            double cosValue = cosFunction.calculate(x, tolerance);
+            return Math.abs(cosValue) > tolerance;
+        } catch (Exception e) {
+            // If cos calculation fails, assume x is not in domain
+            return false;
+        }
     }
 
     @Override

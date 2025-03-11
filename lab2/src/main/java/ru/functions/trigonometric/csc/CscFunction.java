@@ -38,9 +38,31 @@ public class CscFunction implements CscFunctionInterface {
     public boolean isInDomain(double x) {
         // Csc(x) is defined for all x where sin(x) ≠ 0
         // This means x ≠ nπ for integer n
+
+        // Normalize x to [-π, π] for easier checking
         double normalizedX = MathUtils.normalizeAngle(x);
-        return Math.abs(normalizedX) > 1e-10 &&
-                Math.abs(Math.abs(normalizedX) - Math.PI) > 1e-10;
+
+        // Check if x is close to 0 or π (or -π)
+        double tolerance = 1e-10;
+
+        // Check if x is close to 0
+        if (Math.abs(normalizedX) < tolerance) {
+            return false;
+        }
+
+        // Check if x is close to π or -π
+        if (Math.abs(Math.abs(normalizedX) - Math.PI) < tolerance) {
+            return false;
+        }
+
+        // Additional safety check: calculate sin(x) and see if it's close to zero
+        try {
+            double sinValue = sinFunction.calculate(x, tolerance);
+            return Math.abs(sinValue) > tolerance;
+        } catch (Exception e) {
+            // If sin calculation fails, assume x is not in domain
+            return false;
+        }
     }
 
     @Override

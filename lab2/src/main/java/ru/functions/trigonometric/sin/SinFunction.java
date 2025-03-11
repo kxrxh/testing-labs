@@ -35,8 +35,8 @@ public class SinFunction implements SinFunctionInterface {
 
     @Override
     public boolean isInDomain(double x) {
-        // Sin(x) is defined for all real numbers
-        return true;
+        // Sin(x) is defined for all real numbers, but not for infinity
+        return !Double.isInfinite(x) && !Double.isNaN(x);
     }
 
     @Override

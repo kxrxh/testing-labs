@@ -65,10 +65,18 @@ public class CSVWriter {
             writer.newLine();
 
             // Write function values
-            double x = start;
             double epsilon = 1e-6; // Default precision
 
-            while (x <= end) {
+            // Calculate the number of steps to ensure we include the end point
+            int numSteps = (int) Math.round((end - start) / step) + 1;
+
+            for (int i = 0; i < numSteps; i++) {
+                double x = start + i * step;
+                // Ensure we don't exceed the end value due to floating-point errors
+                if (x > end + 1e-10) {
+                    break;
+                }
+
                 try {
                     if (function.isInDomain(x)) {
                         double y = function.calculate(x, epsilon);
@@ -78,8 +86,6 @@ public class CSVWriter {
                 } catch (IllegalArgumentException e) {
                     // Skip points outside the domain or where function is undefined
                 }
-
-                x += step;
             }
         }
     }
