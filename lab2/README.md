@@ -56,16 +56,6 @@ Both applications offer the same functionality:
 - Calculate function values for a specific input
 - Generate CSV files with function values for a range of inputs
 
-### Building and Running
-
-```bash
-cd lab2
-mvn clean package
-java -cp target/math-functions-1.0-SNAPSHOT.jar ru.functions.FunctionApp
-# or
-java -cp target/math-functions-1.0-SNAPSHOT.jar ru.functions.StubFunctionApp
-```
-
 ## Testing
 
 The project uses JUnit 5 for testing with JaCoCo for test coverage analysis.
@@ -80,22 +70,3 @@ Tests are organized into:
 ```bash
 mvn clean test
 ```
-
-### Viewing Coverage Reports
-
-After running tests, JaCoCo generates coverage reports in `target/site/jacoco/`.
-
-```bash
-open target/site/jacoco/index.html
-```
-
-## Integration Testing Strategy
-
-The integration testing follows an incremental approach:
-
-1. Test individual base functions (sin, ln) in isolation
-2. Test derived functions with dependencies on base functions
-3. Test domain-specific functions with their dependencies
-4. Test the complete system function
-
-This bottom-up approach ensures that each component works correctly before integrating it into the larger system.
