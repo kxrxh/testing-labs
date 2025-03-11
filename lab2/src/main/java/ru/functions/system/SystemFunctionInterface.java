@@ -2,9 +2,6 @@ package ru.functions.system;
 
 import ru.functions.utils.Function;
 
-/**
- * Interface for a system function composed of multiple sub-functions
- */
 public interface SystemFunctionInterface extends Function {
 
     /**

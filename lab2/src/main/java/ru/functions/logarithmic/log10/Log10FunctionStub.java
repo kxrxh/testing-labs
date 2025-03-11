@@ -5,17 +5,12 @@ import ru.functions.utils.MathUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Stub implementation of logarithm base 10 function using predefined table
- * values
- */
 public class Log10FunctionStub implements Log10FunctionInterface {
     private final Map<Double, Double> log10Values;
 
     public Log10FunctionStub() {
         log10Values = new HashMap<>();
 
-        // Special values for log10(x) at key points
         log10Values.put(1.0, 0.0);
         log10Values.put(10.0, 1.0);
         log10Values.put(100.0, 2.0);
@@ -27,7 +22,6 @@ public class Log10FunctionStub implements Log10FunctionInterface {
         log10Values.put(0.001, -3.0);
         log10Values.put(0.0001, -4.0);
 
-        // Common values
         log10Values.put(2.0, 0.301029995663981);
         log10Values.put(3.0, 0.47712125471966244);
         log10Values.put(4.0, 0.6020599913279624);
@@ -37,9 +31,8 @@ public class Log10FunctionStub implements Log10FunctionInterface {
         log10Values.put(8.0, 0.9030899869919435);
         log10Values.put(9.0, 0.9542425094393249);
 
-        // Add more values for better coverage
         for (double x = 0.1; x <= 10.0; x += 0.1) {
-            double roundedX = Math.round(x * 100.0) / 100.0; // Round to 2 decimal places
+            double roundedX = Math.round(x * 100.0) / 100.0;
             if (!log10Values.containsKey(roundedX)) {
                 log10Values.put(roundedX, Math.log10(roundedX));
             }
@@ -52,7 +45,6 @@ public class Log10FunctionStub implements Log10FunctionInterface {
             throw new IllegalArgumentException("Input value " + x + " is outside the domain of log base 10");
         }
 
-        // Round to 2 decimal places for table lookup
         double roundedX = Math.round(x * 100.0) / 100.0;
 
         // Check if we have an exact value in our table
@@ -80,7 +72,6 @@ public class Log10FunctionStub implements Log10FunctionInterface {
 
     @Override
     public boolean isInDomain(double x) {
-        // log10(x) is defined for x > 0
         return x > 0;
     }
 
@@ -96,10 +87,9 @@ public class Log10FunctionStub implements Log10FunctionInterface {
         }
 
         if (MathUtils.areEqual(newBase, 10.0, 1e-10)) {
-            return this; // Already base 10
+            return this;
         }
 
-        // Create a new logarithm with the specified base
         return new LogarithmWithBaseStub(this, newBase);
     }
 

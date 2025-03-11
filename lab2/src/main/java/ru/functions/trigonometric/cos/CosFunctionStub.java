@@ -6,9 +6,6 @@ import ru.functions.utils.MathUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Stub implementation of cosine function using predefined table values
- */
 public class CosFunctionStub implements CosFunctionInterface {
     private final Map<Double, Double> cosValues;
     private SinFunctionStub sinFunctionStub;
@@ -17,7 +14,6 @@ public class CosFunctionStub implements CosFunctionInterface {
         this.sinFunctionStub = new SinFunctionStub();
         cosValues = new HashMap<>();
 
-        // Special values for cos(x) at key angles
         cosValues.put(0.0, 1.0);
         cosValues.put(Math.PI / 6, Math.sqrt(3) / 2);
         cosValues.put(Math.PI / 4, Math.sqrt(2) / 2);
@@ -36,9 +32,8 @@ public class CosFunctionStub implements CosFunctionInterface {
         cosValues.put(11 * Math.PI / 6, Math.sqrt(3) / 2);
         cosValues.put(2 * Math.PI, 1.0);
 
-        // Add more values for better coverage
         for (double x = -2 * Math.PI; x <= 2 * Math.PI; x += Math.PI / 12) {
-            double roundedX = Math.round(x * 1000.0) / 1000.0; // Round to 3 decimal places
+            double roundedX = Math.round(x * 1000.0) / 1000.0;
             if (!cosValues.containsKey(roundedX)) {
                 cosValues.put(roundedX, Math.cos(roundedX));
             }
@@ -56,18 +51,14 @@ public class CosFunctionStub implements CosFunctionInterface {
             throw new IllegalArgumentException("Input value is outside the domain of cosine function");
         }
 
-        // Normalize to [-2π, 2π] range
         x = MathUtils.normalizeAngle(x);
 
-        // Round to 3 decimal places for table lookup
         double roundedX = Math.round(x * 1000.0) / 1000.0;
 
-        // Check if we have an exact value in our table
         if (cosValues.containsKey(roundedX)) {
             return cosValues.get(roundedX);
         }
 
-        // Find closest values and perform linear interpolation
         double lowerKey = cosValues.keySet().stream()
                 .filter(k -> k < roundedX)
                 .max(Double::compare)
@@ -87,23 +78,21 @@ public class CosFunctionStub implements CosFunctionInterface {
 
     @Override
     public boolean isInDomain(double x) {
-        // Cos(x) is defined for all real numbers
         return true;
     }
 
     @Override
     public double getPeriod() {
-        return MathUtils.TWO_PI; // 2π
+        return MathUtils.TWO_PI;
     }
 
     @Override
     public int getParity() {
-        return 0; // Even function: cos(-x) = cos(x)
+        return 0;
     }
 
     @Override
     public CosFunctionInterface getDerivative() {
-        // The derivative of cos(x) is -sin(x)
         return new NegativeSinStubAdapter(sinFunctionStub);
     }
 
@@ -143,12 +132,11 @@ public class CosFunctionStub implements CosFunctionInterface {
 
         @Override
         public int getParity() {
-            return 1; // Odd function: -sin(-x) = sin(x)
+            return 1;
         }
 
         @Override
         public CosFunctionInterface getDerivative() {
-            // The derivative of -sin(x) is -cos(x)
             return new NegativeCosStubAdapter();
         }
     }
@@ -176,12 +164,11 @@ public class CosFunctionStub implements CosFunctionInterface {
 
         @Override
         public int getParity() {
-            return 0; // Even function: -cos(-x) = -cos(x)
+            return 0;
         }
 
         @Override
         public CosFunctionInterface getDerivative() {
-            // The derivative of -cos(x) is sin(x)
             return new SinStubAdapter(cosFunctionStub.getSinFunctionStub());
         }
     }
@@ -213,12 +200,11 @@ public class CosFunctionStub implements CosFunctionInterface {
 
         @Override
         public int getParity() {
-            return 1; // Odd function: sin(-x) = -sin(x)
+            return 1;
         }
 
         @Override
         public CosFunctionInterface getDerivative() {
-            // The derivative of sin(x) is cos(x)
             return new CosFunctionStub(sinFunctionStub);
         }
     }

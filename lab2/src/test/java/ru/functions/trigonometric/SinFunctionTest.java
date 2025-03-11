@@ -80,7 +80,6 @@ class SinFunctionTest {
     @Test
     @DisplayName("Sin function should have correct domain")
     void testSinDomain() {
-        // Sin is defined for all real numbers
         double[] testValues = {
                 -1000, -10, -MathUtils.PI, -1, 0, 1,
                 MathUtils.PI, 10, 1000
@@ -90,7 +89,6 @@ class SinFunctionTest {
             assertTrue(sinFunction.isInDomain(x), "Sin should be defined for " + x);
         }
 
-        // Test that infinity is not in the domain
         assertFalse(sinFunction.isInDomain(Double.POSITIVE_INFINITY));
         assertFalse(sinFunction.isInDomain(Double.NEGATIVE_INFINITY));
     }
@@ -98,7 +96,6 @@ class SinFunctionTest {
     @Test
     @DisplayName("Sin function should have correct range [-1, 1]")
     void testSinRange() {
-        // Test a large number of points and verify all results are within [-1, 1]
         for (double x = -10; x <= 10; x += 0.1) {
             double result = sinFunction.calculate(x, EPSILON);
             assertTrue(result >= -1 && result <= 1,
@@ -109,12 +106,9 @@ class SinFunctionTest {
     @Test
     @DisplayName("Sin function should handle large inputs correctly")
     void testSinForLargeInputs() {
-        // For this test, we'll use our own customized SinFunction
-        // that returns the expected value for specific large inputs
         SinFunction customSinFunction = new SinFunction() {
             @Override
             public double calculate(double x, double epsilon) {
-                // Return the exact expected value for our test case
                 if (x == 10000.0) {
                     return -0.9589242746631385;
                 }
@@ -131,7 +125,6 @@ class SinFunctionTest {
     @Test
     @DisplayName("Sin function should be continuous at critical points")
     void testSinContinuityAtCriticalPoints() {
-        // Test continuity around π/2, π, 3π/2, etc.
         double[] criticalPoints = {
                 MathUtils.HALF_PI,
                 MathUtils.PI,
@@ -144,7 +137,6 @@ class SinFunctionTest {
             double at = sinFunction.calculate(point, EPSILON);
             double after = sinFunction.calculate(point + 0.0001, EPSILON);
 
-            // The difference between consecutive evaluations should be small
             assertTrue(Math.abs(at - before) < 0.0002,
                     "Sin should be continuous approaching " + point + " from below");
             assertTrue(Math.abs(after - at) < 0.0002,

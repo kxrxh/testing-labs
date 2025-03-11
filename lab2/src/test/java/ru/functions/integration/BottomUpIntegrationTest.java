@@ -421,7 +421,7 @@ public class BottomUpIntegrationTest {
         };
 
         double result = positiveDomainFunction.calculate(x, EPSILON);
-        assertEquals(expected, result, EPSILON * 100, // Higher tolerance due to complex calculation
+        assertEquals(expected, result, EPSILON * 100,
                 "Positive domain function at " + x + " should be " + expected);
     }
 
@@ -537,19 +537,16 @@ public class BottomUpIntegrationTest {
             }
         };
 
-        // Test negative domain
         double xNeg = -0.3;
         double expectedNeg = 72.01554118019029; // From Python calculation
         assertEquals(expectedNeg, systemFunction.calculate(xNeg, EPSILON), EPSILON * 100,
                 "System function at " + xNeg + " should use negative domain formula");
 
-        // Test positive domain
         double xPos = 2.0;
         double expectedPos = 0.8041478454553692; // From Python calculation
         assertEquals(expectedPos, systemFunction.calculate(xPos, EPSILON), EPSILON * 100,
                 "System function at " + xPos + " should use positive domain formula");
 
-        // Test domain boundaries
         assertFalse(systemFunction.isInDomain(0.0), "x = 0 should not be in the domain");
         assertFalse(systemFunction.isInDomain(-Math.PI / 2), "x = -π/2 should not be in the domain");
     }
@@ -562,7 +559,6 @@ public class BottomUpIntegrationTest {
     @Test
     @DisplayName("Phase 6: Mixed integration with stubs")
     void testMixedIntegrationWithStubs() {
-        // Create real implementations
         SinFunction sinFunction = new SinFunction();
         CosFunction cosFunction = new CosFunction(sinFunction);
         SecFunction secFunction = new SecFunction(cosFunction);
@@ -570,11 +566,9 @@ public class BottomUpIntegrationTest {
         NegativeDomainFunction negativeDomainFunction = new NegativeDomainFunction(
                 sinFunction, cosFunction, secFunction, cscFunction);
 
-        // Create stub implementations for logarithmic components
         LnFunction lnStub = new LnFunction() {
             @Override
             public double calculate(double x, double epsilon) {
-                // Return pre-calculated values for specific inputs
                 if (x == 2.0)
                     return 0.693;
                 if (x == 5.0)
@@ -592,26 +586,21 @@ public class BottomUpIntegrationTest {
         PositiveDomainFunction positiveDomainStub = new PositiveDomainFunction(
                 log2Stub, log10Stub, log5Stub);
 
-        // Create mixed system with real negative domain and stub positive domain
         SystemFunction mixedSystem = new SystemFunction(
                 negativeDomainFunction, positiveDomainStub);
 
-        // Test the mixed system
         double negValue = -0.3;
         double posValue = 2.0;
 
-        // Check if both domains work correctly in the mixed system
         assertTrue(mixedSystem.isInDomain(negValue),
                 "Mixed system should recognize " + negValue + " as valid input");
         assertTrue(mixedSystem.isInDomain(posValue),
                 "Mixed system should recognize " + posValue + " as valid input");
 
-        // Verify calculation in negative domain works with real implementation
         double negResult = mixedSystem.calculate(negValue, EPSILON);
         assertTrue(Double.isFinite(negResult),
                 "Mixed system calculation for " + negValue + " should return finite result");
 
-        // Verify calculation in positive domain works with stub implementation
         double posResult = mixedSystem.calculate(posValue, EPSILON);
         assertTrue(Double.isFinite(posResult),
                 "Mixed system calculation for " + posValue + " should return finite result");
@@ -643,33 +632,27 @@ public class BottomUpIntegrationTest {
         SystemFunction systemFunction = new SystemFunction(
                 negativeDomainFunction, positiveDomainFunction);
 
-        // Test values very close to x = 0
         double nearZeroNeg = -1e-10;
         double nearZeroPos = 1e-10;
 
-        // Both should be in domain, but very close to boundary
         assertTrue(systemFunction.isInDomain(nearZeroNeg),
                 "x = " + nearZeroNeg + " should be in domain");
         assertTrue(systemFunction.isInDomain(nearZeroPos),
                 "x = " + nearZeroPos + " should be in domain");
 
-        // Test values very close to singularities
         double nearPiOver2 = -Math.PI / 2 + 1e-10;
         double nearPi = -Math.PI + 1e-10;
 
-        // Check that values very close to singularities are handled properly
         assertFalse(systemFunction.isInDomain(-Math.PI / 2),
                 "x = -π/2 should not be in domain");
         assertFalse(systemFunction.isInDomain(-Math.PI),
                 "x = -π should not be in domain");
 
-        // But values slightly away should be valid
         assertTrue(systemFunction.isInDomain(-Math.PI / 2 + 0.01),
                 "x = -π/2 + 0.01 should be in domain");
         assertTrue(systemFunction.isInDomain(-Math.PI + 0.01),
                 "x = -π + 0.01 should be in domain");
 
-        // Check very small positive values for logarithm issues
         double verySmallPositive = 1e-5;
         assertTrue(systemFunction.isInDomain(verySmallPositive),
                 "Small positive value " + verySmallPositive + " should be in domain");
@@ -684,7 +667,6 @@ public class BottomUpIntegrationTest {
     @Test
     @DisplayName("Test system function with extreme values")
     void testExtremeValues() {
-        // Set up the full system with stubs for extreme values
         SystemFunction systemFunction = new SystemFunction(
                 new NegativeDomainFunction(
                         new SinFunction(),
@@ -697,19 +679,16 @@ public class BottomUpIntegrationTest {
                         new Log5Function(new LnFunction()))) {
             @Override
             public double calculate(double x, double epsilon) {
-                // Use exact values for test cases
                 if (x == 100.0)
                     return 21.01317782169802;
                 return super.calculate(x, epsilon);
             }
         };
 
-        // Test with a large positive value
         double largePositive = 100.0;
         assertEquals(21.01317782169802, systemFunction.calculate(largePositive, EPSILON), EPSILON * 100,
                 "System function for large value " + largePositive + " should match expected value");
 
-        // Test the system can handle values near domain boundaries
         for (double x : new double[] { -Math.PI / 2 + 0.01, -Math.PI + 0.01, -3 * Math.PI / 2 + 0.01 }) {
             assertTrue(systemFunction.isInDomain(x),
                     "System function domain should include " + x);

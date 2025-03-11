@@ -8,9 +8,6 @@ import java.util.Objects;
 import ru.functions.utils.Function;
 import ru.functions.system.SystemFunctionInterface;
 
-/**
- * A utility class for writing function values to CSV files
- */
 public class CSVWriter {
     private final String separator;
     private static final String DEFAULT_SEPARATOR = ",";
@@ -58,22 +55,17 @@ public class CSVWriter {
             throw new IllegalArgumentException("Step size must be positive");
         }
 
-        // Write to file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            // Write header
             writer.write(String.format(HEADER_FORMAT, separator));
             writer.newLine();
 
-            // Write function values
-            double epsilon = 1e-6; // Default precision
+            double epsilon = 1e-6;
 
-            // Calculate the number of steps precisely
             int numSteps = (int) Math.floor((end - start) / step) + 1;
 
             for (int i = 0; i < numSteps; i++) {
                 double x = start + i * step;
 
-                // Ensure we don't exceed the end value due to floating-point errors
                 if (x > end + 1e-10) {
                     break;
                 }

@@ -35,7 +35,6 @@ public class PositiveDomainFunctionStub implements Function {
         double log10 = log10FunctionStub.calculate(x, epsilon);
         double log5 = log5FunctionStub.calculate(x, epsilon);
 
-        // Perform the step-by-step calculation with proper precision management
         double log2PlusLog10 = log2 + log10;
         double squared = log2PlusLog10 * log2PlusLog10;
         double squaredMinusLog2 = squared - log2;
@@ -47,7 +46,6 @@ public class PositiveDomainFunctionStub implements Function {
 
     @Override
     public boolean isInDomain(double x) {
-        // Domain: x > 0
         return x > 0;
     }
 }

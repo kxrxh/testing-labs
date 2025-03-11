@@ -5,10 +5,6 @@ import ru.functions.utils.MathUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Stub implementation of natural logarithm function using predefined table
- * values
- */
 public class LnFunctionStub implements LnFunctionInterface {
     private final Map<Double, Double> lnValues;
     private static final double E = 2.718281828459045;
@@ -16,30 +12,26 @@ public class LnFunctionStub implements LnFunctionInterface {
     public LnFunctionStub() {
         lnValues = new HashMap<>();
 
-        // Special values for ln(x) at key points
         lnValues.put(1.0, 0.0);
         lnValues.put(E, 1.0);
         lnValues.put(E * E, 2.0);
         lnValues.put(1.0 / E, -1.0);
         lnValues.put(1.0 / (E * E), -2.0);
 
-        // Common values
         lnValues.put(2.0, 0.6931471805599453);
         lnValues.put(3.0, 1.0986122886681098);
         lnValues.put(5.0, 1.6094379124341003);
         lnValues.put(7.0, 1.9459101490553132);
         lnValues.put(10.0, 2.302585092994046);
 
-        // Fractional values
         lnValues.put(0.1, -2.3025850929940455);
         lnValues.put(0.2, -1.6094379124341003);
         lnValues.put(0.5, -0.6931471805599453);
         lnValues.put(1.5, 0.4054651081081644);
         lnValues.put(2.5, 0.9162907318741551);
 
-        // Add more values for better coverage
         for (double x = 0.1; x <= 10.0; x += 0.1) {
-            double roundedX = Math.round(x * 100.0) / 100.0; // Round to 2 decimal places
+            double roundedX = Math.round(x * 100.0) / 100.0;
             if (!lnValues.containsKey(roundedX)) {
                 lnValues.put(roundedX, Math.log(roundedX));
             }
@@ -53,10 +45,8 @@ public class LnFunctionStub implements LnFunctionInterface {
                     "Input value " + x + " is outside the domain of natural logarithm function");
         }
 
-        // Round to 2 decimal places for table lookup
         double roundedX = Math.round(x * 100.0) / 100.0;
 
-        // Check if we have an exact value in our table
         if (lnValues.containsKey(roundedX)) {
             return lnValues.get(roundedX);
         }
@@ -81,13 +71,12 @@ public class LnFunctionStub implements LnFunctionInterface {
 
     @Override
     public boolean isInDomain(double x) {
-        // ln(x) is defined for x > 0
         return x > 0;
     }
 
     @Override
     public double getBase() {
-        return E; // Base of natural logarithm is e
+        return E;
     }
 
     @Override
@@ -97,10 +86,9 @@ public class LnFunctionStub implements LnFunctionInterface {
         }
 
         if (MathUtils.areEqual(newBase, E, 1e-10)) {
-            return this; // Already natural logarithm
+            return this;
         }
 
-        // Create a new logarithm with the specified base
         return new LogarithmWithBaseStub(this, newBase);
     }
 

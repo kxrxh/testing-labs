@@ -5,17 +5,12 @@ import ru.functions.utils.MathUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Stub implementation of logarithm base 2 function using predefined table
- * values
- */
 public class Log2FunctionStub implements Log2FunctionInterface {
     private final Map<Double, Double> log2Values;
 
     public Log2FunctionStub() {
         log2Values = new HashMap<>();
 
-        // Special values for log2(x) at key points
         log2Values.put(1.0, 0.0);
         log2Values.put(2.0, 1.0);
         log2Values.put(4.0, 2.0);
@@ -33,7 +28,6 @@ public class Log2FunctionStub implements Log2FunctionInterface {
         log2Values.put(0.125, -3.0);
         log2Values.put(0.0625, -4.0);
 
-        // Common values
         log2Values.put(3.0, 1.5849625007211563);
         log2Values.put(5.0, 2.321928094887362);
         log2Values.put(6.0, 2.584962500721156);
@@ -41,9 +35,8 @@ public class Log2FunctionStub implements Log2FunctionInterface {
         log2Values.put(9.0, 3.1699250014423126);
         log2Values.put(10.0, 3.321928094887362);
 
-        // Add more values for better coverage
         for (double x = 0.1; x <= 10.0; x += 0.1) {
-            double roundedX = Math.round(x * 100.0) / 100.0; // Round to 2 decimal places
+            double roundedX = Math.round(x * 100.0) / 100.0;
             if (!log2Values.containsKey(roundedX)) {
                 log2Values.put(roundedX, Math.log(roundedX) / Math.log(2));
             }
@@ -56,10 +49,8 @@ public class Log2FunctionStub implements Log2FunctionInterface {
             throw new IllegalArgumentException("Input value " + x + " is outside the domain of log base 2");
         }
 
-        // Round to 2 decimal places for table lookup
         double roundedX = Math.round(x * 100.0) / 100.0;
 
-        // Check if we have an exact value in our table
         if (log2Values.containsKey(roundedX)) {
             return log2Values.get(roundedX);
         }
@@ -100,10 +91,9 @@ public class Log2FunctionStub implements Log2FunctionInterface {
         }
 
         if (MathUtils.areEqual(newBase, 2.0, 1e-10)) {
-            return this; // Already base 2
+            return this;
         }
 
-        // Create a new logarithm with the specified base
         return new LogarithmWithBaseStub(this, newBase);
     }
 

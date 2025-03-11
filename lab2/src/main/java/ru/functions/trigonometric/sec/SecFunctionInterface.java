@@ -2,9 +2,6 @@ package ru.functions.trigonometric.sec;
 
 import ru.functions.utils.Function;
 
-/**
- * Interface for secant function and related functions in the sec package
- */
 public interface SecFunctionInterface extends Function {
     /**
      * Gets the period of the trigonometric function

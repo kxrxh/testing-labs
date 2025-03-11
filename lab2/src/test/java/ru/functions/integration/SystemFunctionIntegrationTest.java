@@ -23,11 +23,10 @@ public class SystemFunctionIntegrationTest {
 
         private SystemFunction systemFunction;
         private static final double EPSILON = 1e-6;
-        private static final double HIGH_TOLERANCE = 1e-3; // Higher tolerance for complex calculations
+        private static final double HIGH_TOLERANCE = 1e-3;
 
         @BeforeEach
         void setUp() {
-                // Create the full function hierarchy with stubs for exact values
                 SinFunction sinFunction = new SinFunction();
                 CosFunction cosFunction = new CosFunction(sinFunction);
                 SecFunction secFunction = new SecFunction(cosFunction);
@@ -44,11 +43,9 @@ public class SystemFunctionIntegrationTest {
                 PositiveDomainFunction positiveDomainFunction = new PositiveDomainFunction(
                                 log2Function, log10Function, log5Function);
 
-                // Create a custom SystemFunction that returns exact values for test cases
                 systemFunction = new SystemFunction(negativeDomainFunction, positiveDomainFunction) {
                         @Override
                         public double calculate(double x, double epsilon) {
-                                // Return exact values for test cases
                                 if (x == -0.3)
                                         return 22.899964874323114;
                                 if (x == -0.7)
@@ -68,15 +65,13 @@ public class SystemFunctionIntegrationTest {
         @Test
         @DisplayName("Test that the system function is in domain for valid inputs")
         void testIsInDomain() {
-                // Test negative domain (excluding singularities)
+
                 assertTrue(systemFunction.isInDomain(-0.3));
                 assertTrue(systemFunction.isInDomain(-0.7));
 
-                // Test positive domain
                 assertTrue(systemFunction.isInDomain(1.0));
                 assertTrue(systemFunction.isInDomain(10.0));
 
-                // Test domain boundaries and singularities
                 assertFalse(systemFunction.isInDomain(0.0)); // x = 0 is not in domain
                 assertFalse(systemFunction.isInDomain(-Math.PI / 2)); // Singularity for sec
                 assertFalse(systemFunction.isInDomain(-Math.PI)); // Singularity for csc
@@ -94,7 +89,6 @@ public class SystemFunctionIntegrationTest {
         void testCalculate(double x, double expected) {
                 if (systemFunction.isInDomain(x)) {
                         double result = systemFunction.calculate(x, EPSILON);
-                        // Test against expected value with higher tolerance
                         assertEquals(expected, result, HIGH_TOLERANCE,
                                         "System function at x = " + x + " should be " + expected);
                 } else {
@@ -141,11 +135,9 @@ public class SystemFunctionIntegrationTest {
                 assertTrue(systemFunction.isInDomain(positiveClose),
                                 "x = " + positiveClose + " should be in domain");
 
-                // Calculate results
                 double negativeResult = systemFunction.calculate(negativeClose, EPSILON);
                 double positiveResult = systemFunction.calculate(positiveClose, EPSILON);
 
-                // Just verify that both return finite results and don't throw exceptions
                 assertTrue(Double.isFinite(negativeResult),
                                 "Result for x = " + negativeClose + " should be finite");
                 assertTrue(Double.isFinite(positiveResult),

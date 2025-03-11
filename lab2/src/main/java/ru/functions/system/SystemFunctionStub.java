@@ -51,7 +51,7 @@ public class SystemFunctionStub implements SystemFunctionInterface {
         // excluding x = 0 and x = -π/2, -π, -3π/2, ...
 
         if (MathUtils.isZero(x, 1e-10)) {
-            return false; // x = 0 is not in the domain
+            return false;
         }
 
         if (x <= 0) {
@@ -63,13 +63,13 @@ public class SystemFunctionStub implements SystemFunctionInterface {
 
     @Override
     public int getSubFunctionCount() {
-        return 2; // Two sub-functions: negative domain and positive domain
+        return 2;
     }
 
     @Override
     public int getApplicableSubFunction(double x) {
         if (!isInDomain(x)) {
-            return -1; // Outside domain
+            return -1;
         }
 
         return (x <= 0) ? 0 : 1; // 0 for negative domain, 1 for positive domain
@@ -105,6 +105,6 @@ public class SystemFunctionStub implements SystemFunctionInterface {
 
     @Override
     public boolean isUsingStubs() {
-        return true; // This is a stub implementation
+        return true;
     }
 }

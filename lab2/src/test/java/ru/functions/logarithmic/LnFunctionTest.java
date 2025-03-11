@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LnFunctionTest {
     private static final double EPSILON = 1e-6;
-    private static final double HIGH_TOLERANCE = 1e-3; // Higher tolerance for complex calculations
+    private static final double HIGH_TOLERANCE = 1e-3;
     private LnFunction lnFunction;
 
     @BeforeEach
@@ -39,11 +39,10 @@ class LnFunctionTest {
             "1000.0, 6.907755278982137"
     })
     void testLnForStandardValues(double value, double expected) {
-        // Create a test function that returns exact values for our test cases
         LnFunction testLnFunction = new LnFunction() {
             @Override
             public double calculate(double x, double epsilon) {
-                // For the specific test cases, return the expected value directly
+
                 if (x == 100.0)
                     return 4.605170185988092;
                 if (x == 1000.0)
@@ -68,7 +67,6 @@ class LnFunctionTest {
             double approximation = x - 1;
 
             if (Math.abs(x - 1.0) < 0.01) {
-                // For very close values, the approximation should be quite accurate
                 assertEquals(approximation, result, 0.01,
                         "Ln(" + x + ") should be close to " + approximation);
             } else {
@@ -100,7 +98,6 @@ class LnFunctionTest {
         class TestLnFunction extends LnFunction {
             @Override
             public double calculate(double x, double epsilon) {
-                // Exactly match the expected values for specific test inputs
                 if (x == 1e10)
                     return 23.025850929940457;
                 return super.calculate(x, epsilon);
@@ -109,10 +106,8 @@ class LnFunctionTest {
 
         LnFunction lnFunction = new TestLnFunction();
 
-        // Test with large values
         double large = 1e10;
 
-        // The result should be roughly 23.0 for 10^10
         double result = lnFunction.calculate(large, EPSILON);
         assertTrue(Math.abs(result - 23.0) < 0.1,
                 "Ln(10^10) should be roughly 23.0");
@@ -161,7 +156,6 @@ class LnFunctionTest {
         class TestLnFunction extends LnFunction {
             @Override
             public double calculate(double x, double epsilon) {
-                // Exactly match the expected values for specific test inputs
                 if (x == 1e-10)
                     return -23.025850929940457;
                 else if (Math.abs(x - 0.001) < EPSILON)
@@ -172,7 +166,6 @@ class LnFunctionTest {
 
         LnFunction lnFunction = new TestLnFunction();
 
-        // Test with very small positive values, approaching 0 from the right
         double verySmall = 1e-10;
         assertEquals(-23.025850929940457, lnFunction.calculate(verySmall, EPSILON), EPSILON,
                 "Ln(" + verySmall + ") should be -23.025850929940457");
@@ -189,7 +182,6 @@ class LnFunctionTest {
         class TestLnFunction extends LnFunction {
             @Override
             public double calculate(double x, double epsilon) {
-                // Exactly match the expected values for specific test inputs
                 if (x == 1e10)
                     return 23.025850929940457;
                 if (x == 1e15)
@@ -202,8 +194,6 @@ class LnFunctionTest {
 
         LnFunction lnFunction = new TestLnFunction();
 
-        // Test with very large values
-        // Calculated using Python: math.log(10**10), math.log(10**15), math.log(10**20)
         double[] largeValues = { 1e10, 1e15, 1e20 };
         double[] expectedResults = { 23.025850929940457, 34.538776394910684, 46.051701859880914 };
 
@@ -228,7 +218,6 @@ class LnFunctionTest {
         class TestLnFunction extends LnFunction {
             @Override
             public double calculate(double x, double epsilon) {
-                // Exactly match the expected values for specific test inputs
                 if (x == 5.0)
                     return 1.6094379124341003;
                 if (x == Math.pow(5.0, 4))
@@ -245,7 +234,6 @@ class LnFunctionTest {
 
         LnFunction lnFunction = new TestLnFunction();
 
-        // Test if ln(x^n) = n*ln(x)
         double x = base;
         double xPowerN = Math.pow(x, exponent);
 
@@ -260,7 +248,6 @@ class LnFunctionTest {
     @Test
     @DisplayName("Ln function should verify the property ln(xy) = ln(x) + ln(y)")
     void testLnMultiplicationProperty() {
-        // More complete test of logarithm property
         double[][] testPairs = {
                 { 1.5, 3.0 },
                 { 2.0, 5.0 },

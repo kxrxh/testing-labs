@@ -23,7 +23,7 @@ import java.util.Scanner;
 public class StubFunctionApp {
 
     public static void main(String[] args) {
-        // Create stub function instances
+
         SinFunctionStub sinFunctionStub = new SinFunctionStub();
         CosFunctionStub cosFunctionStub = new CosFunctionStub(sinFunctionStub);
         SecFunctionStub secFunctionStub = new SecFunctionStub(cosFunctionStub);
@@ -43,10 +43,8 @@ public class StubFunctionApp {
         SystemFunctionStub systemFunctionStub = new SystemFunctionStub(
                 negativeDomainFunctionStub, positiveDomainFunctionStub);
 
-        // Create CSV writer
         CSVWriter csvWriter = new CSVWriter(",");
 
-        // Set up user interface
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 

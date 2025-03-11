@@ -2,10 +2,6 @@ package ru.functions.logarithmic.log5;
 
 import ru.functions.utils.Function;
 
-/**
- * Interface for logarithm base 5 function and related functions in the log5
- * package
- */
 public interface Log5FunctionInterface extends Function {
     /**
      * Gets the base of the logarithm

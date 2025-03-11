@@ -38,39 +38,33 @@ public class SecFunction implements SecFunctionInterface {
     public boolean isInDomain(double x) {
         // Sec(x) is defined for all x where cos(x) ≠ 0
         // This means x ≠ (2n+1)π/2 for integer n
-
-        // Normalize x to [-π, π] for easier checking
         double normalizedX = MathUtils.normalizeAngle(x);
         double tolerance = 1e-10;
 
-        // Check if x is close to π/2 or -π/2
         if (Math.abs(Math.abs(normalizedX) - MathUtils.HALF_PI) < tolerance) {
             return false;
         }
 
-        // Additional safety check: calculate cos(x) and see if it's close to zero
         try {
             double cosValue = cosFunction.calculate(x, tolerance);
             return Math.abs(cosValue) > tolerance;
         } catch (Exception e) {
-            // If cos calculation fails, assume x is not in domain
             return false;
         }
     }
 
     @Override
     public double getPeriod() {
-        return MathUtils.TWO_PI; // 2π
+        return MathUtils.TWO_PI;
     }
 
     @Override
     public int getParity() {
-        return 0; // Even function: sec(-x) = sec(x)
+        return 0;
     }
 
     @Override
     public SecFunctionInterface getDerivative() {
-        // The derivative of sec(x) is sec(x)tan(x)
         return new SecTanProductAdapter();
     }
 
@@ -117,13 +111,11 @@ public class SecFunction implements SecFunctionInterface {
 
         @Override
         public int getParity() {
-            return 1; // Odd function: sec(-x)tan(-x) = -sec(x)tan(x)
+            return 1;
         }
 
         @Override
         public SecFunctionInterface getDerivative() {
-            // The derivative of sec(x)tan(x) is sec^3(x) + sec(x)tan^2(x)
-            // For simplicity, we'll return a basic implementation
             return new SecDerivativeAdapter();
         }
     }
@@ -164,12 +156,11 @@ public class SecFunction implements SecFunctionInterface {
 
         @Override
         public int getParity() {
-            return 0; // Even function
+            return 0;
         }
 
         @Override
         public SecFunctionInterface getDerivative() {
-            // For simplicity, we'll return null for the third derivative
             return null;
         }
     }

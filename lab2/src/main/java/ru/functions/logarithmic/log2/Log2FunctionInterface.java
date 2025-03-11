@@ -2,10 +2,6 @@ package ru.functions.logarithmic.log2;
 
 import ru.functions.utils.Function;
 
-/**
- * Interface for logarithm base 2 function and related functions in the log2
- * package
- */
 public interface Log2FunctionInterface extends Function {
     /**
      * Gets the base of the logarithm

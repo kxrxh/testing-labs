@@ -6,9 +6,6 @@ import ru.functions.utils.MathUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Stub implementation of secant function using predefined table values
- */
 public class SecFunctionStub implements SecFunctionInterface {
     private final Map<Double, Double> secValues;
     private CosFunctionStub cosFunctionStub;
@@ -17,7 +14,6 @@ public class SecFunctionStub implements SecFunctionInterface {
         this.cosFunctionStub = new CosFunctionStub();
         secValues = new HashMap<>();
 
-        // Special values for sec(x) at key angles
         secValues.put(0.0, 1.0);
         secValues.put(Math.PI / 6, 2.0 / Math.sqrt(3));
         secValues.put(Math.PI / 4, Math.sqrt(2));
@@ -36,11 +32,9 @@ public class SecFunctionStub implements SecFunctionInterface {
         secValues.put(11 * Math.PI / 6, 2.0 / Math.sqrt(3));
         secValues.put(2 * Math.PI, 1.0);
 
-        // Add more values for better coverage
         for (double x = -2 * Math.PI; x <= 2 * Math.PI; x += Math.PI / 12) {
-            double roundedX = Math.round(x * 1000.0) / 1000.0; // Round to 3 decimal places
+            double roundedX = Math.round(x * 1000.0) / 1000.0;
 
-            // Skip values where cos(x) is close to 0
             if (!isInDomain(roundedX)) {
                 continue;
             }
@@ -65,13 +59,10 @@ public class SecFunctionStub implements SecFunctionInterface {
             throw new IllegalArgumentException("Input value is outside the domain of secant function");
         }
 
-        // Normalize to [-2π, 2π] range
         x = MathUtils.normalizeAngle(x);
 
-        // Round to 3 decimal places for table lookup
         double roundedX = Math.round(x * 1000.0) / 1000.0;
 
-        // Check if we have an exact value in our table
         if (secValues.containsKey(roundedX)) {
             return secValues.get(roundedX);
         }
@@ -98,17 +89,16 @@ public class SecFunctionStub implements SecFunctionInterface {
 
     @Override
     public double getPeriod() {
-        return MathUtils.TWO_PI; // 2π
+        return MathUtils.TWO_PI;
     }
 
     @Override
     public int getParity() {
-        return 0; // Even function: sec(-x) = sec(x)
+        return 0;
     }
 
     @Override
     public SecFunctionInterface getDerivative() {
-        // The derivative of sec(x) is sec(x)tan(x)
         return new SecTanProductStubAdapter();
     }
 
@@ -155,12 +145,11 @@ public class SecFunctionStub implements SecFunctionInterface {
 
         @Override
         public int getParity() {
-            return 1; // Odd function: sec(-x)tan(-x) = -sec(x)tan(x)
+            return 1;
         }
 
         @Override
         public SecFunctionInterface getDerivative() {
-            // For simplicity, we'll return null for the second derivative
             return null;
         }
     }

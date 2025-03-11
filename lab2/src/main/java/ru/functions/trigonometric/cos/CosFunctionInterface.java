@@ -2,9 +2,6 @@ package ru.functions.trigonometric.cos;
 
 import ru.functions.utils.Function;
 
-/**
- * Interface for cosine function and related functions in the cos package
- */
 public interface CosFunctionInterface extends Function {
     /**
      * Gets the period of the trigonometric function

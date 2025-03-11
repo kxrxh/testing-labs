@@ -2,14 +2,15 @@ package ru.functions.logarithmic.ln;
 
 import ru.functions.utils.MathUtils;
 
-/**
- * Implementation of natural logarithm function using Taylor series expansion
- */
 public class LnFunction implements LnFunctionInterface {
-
-    // Base of natural logarithm (e)
     private static final double E = 2.718281828459045;
 
+    /**
+     * For x close to 1, we use Taylor series expansion for ln(1+y)
+     *
+     * For other values, we use the identity ln(x) = ln((1+y)/(1-y)) = 2*artanh(y)
+     * where y = (x-1)/(x+1) and artanh(y) has a simple Taylor expansion
+     */
     @Override
     public double calculate(double x, double epsilon) throws IllegalArgumentException {
         if (!isInDomain(x)) {
@@ -17,64 +18,53 @@ public class LnFunction implements LnFunctionInterface {
                     "Input value " + x + " is outside the domain of natural logarithm function");
         }
 
-        // For x close to 1, we use Taylor series expansion for ln(1+y)
-        // For other values, we use the identity ln(x) = ln((1+y)/(1-y)) = 2*artanh(y)
-        // where y = (x-1)/(x+1) and artanh(y) has a simple Taylor expansion
-
         if (MathUtils.areEqual(x, 1.0, epsilon)) {
             return 0.0;
         }
 
-        // For very small values, use logarithm identity ln(x) = -ln(1/x)
         if (x < 1e-5) {
             return -calculate(1 / x, epsilon);
         }
 
-        // For very large values, use the scale-down identity
         if (x > 1e5) {
             // Use ln(x) = ln(x/a) + ln(a) where a is a power of 2
-            // Find the largest power of 2 less than x
             double a = 1.0;
             while (a * 2 < x) {
                 a *= 2;
             }
-            // ln(2) ≈ 0.6931471805599453
             return calculate(x / a, epsilon) + calculate(a, epsilon);
         }
 
         if (x > 0.5 && x < 1.5) {
-            // For x close to 1, use Taylor series for ln(1+y) where y = x-1
             double y = x - 1.0;
             double result = 0.0;
             double term = y;
             int n = 1;
 
-            // Taylor series for ln(1+y): y - y^2/2 + y^3/3 - y^4/4 + ...
-            while (Math.abs(term) > epsilon / 10) { // Increased precision
+            // ln(1+y): y - y^2/2 + y^3/3 - y^4/4 + ...
+            while (Math.abs(term) > epsilon / 10) {
                 result += term;
                 term = -term * y * (n) / (n + 1);
                 n++;
 
-                // Prevent infinite loops
                 if (n > 200)
                     break;
             }
 
             return result;
         } else {
-            // For other values, use the identity ln(x) = 2*artanh((x-1)/(x+1))
+            // ln(x) = 2*artanh((x-1)/(x+1))
             double y = (x - 1.0) / (x + 1.0);
             double result = 0.0;
             double term = y;
             int n = 0;
 
-            // Taylor series for artanh(y): y + y^3/3 + y^5/5 + ...
-            while (Math.abs(term) > epsilon / 20) { // Increased precision
+            // artanh(y): y + y^3/3 + y^5/5 + ...
+            while (Math.abs(term) > epsilon / 20) {
                 result += term;
                 n++;
                 term = term * y * y * (2 * n - 1) / (2 * n + 1);
 
-                // Prevent infinite loops
                 if (n > 200)
                     break;
             }
@@ -85,13 +75,12 @@ public class LnFunction implements LnFunctionInterface {
 
     @Override
     public boolean isInDomain(double x) {
-        // ln(x) is defined for x > 0
         return x > 0;
     }
 
     @Override
     public double getBase() {
-        return E; // Base of natural logarithm is e
+        return E;
     }
 
     @Override
@@ -101,10 +90,9 @@ public class LnFunction implements LnFunctionInterface {
         }
 
         if (MathUtils.areEqual(newBase, E, 1e-10)) {
-            return this; // Already natural logarithm
+            return this;
         }
 
-        // Create a new logarithm with the specified base
         return new LogarithmWithBase(this, newBase);
     }
 

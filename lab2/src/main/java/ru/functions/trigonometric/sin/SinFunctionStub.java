@@ -5,16 +5,12 @@ import ru.functions.utils.MathUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Stub implementation of sine function using predefined table values
- */
 public class SinFunctionStub implements SinFunctionInterface {
     private final Map<Double, Double> sinValues;
 
     public SinFunctionStub() {
         sinValues = new HashMap<>();
 
-        // Special values for sin(x) at key angles
         sinValues.put(0.0, 0.0);
         sinValues.put(Math.PI / 6, 0.5);
         sinValues.put(Math.PI / 4, Math.sqrt(2) / 2);
@@ -33,9 +29,8 @@ public class SinFunctionStub implements SinFunctionInterface {
         sinValues.put(11 * Math.PI / 6, -0.5);
         sinValues.put(2 * Math.PI, 0.0);
 
-        // Add more values for better coverage
         for (double x = -2 * Math.PI; x <= 2 * Math.PI; x += Math.PI / 12) {
-            double roundedX = Math.round(x * 1000.0) / 1000.0; // Round to 3 decimal places
+            double roundedX = Math.round(x * 1000.0) / 1000.0;
             if (!sinValues.containsKey(roundedX)) {
                 sinValues.put(roundedX, Math.sin(roundedX));
             }
@@ -48,18 +43,14 @@ public class SinFunctionStub implements SinFunctionInterface {
             throw new IllegalArgumentException("Input value is outside the domain of sine function");
         }
 
-        // Normalize to [-2π, 2π] range
         x = MathUtils.normalizeAngle(x);
 
-        // Round to 3 decimal places for table lookup
         double roundedX = Math.round(x * 1000.0) / 1000.0;
 
-        // Check if we have an exact value in our table
         if (sinValues.containsKey(roundedX)) {
             return sinValues.get(roundedX);
         }
 
-        // Find closest values and perform linear interpolation
         double lowerKey = sinValues.keySet().stream()
                 .filter(k -> k < roundedX)
                 .max(Double::compare)
@@ -79,26 +70,24 @@ public class SinFunctionStub implements SinFunctionInterface {
 
     @Override
     public boolean isInDomain(double x) {
-        // Sin(x) is defined for all real numbers
         return true;
     }
 
     @Override
     public double getPeriod() {
-        return MathUtils.TWO_PI; // 2π
+        return MathUtils.TWO_PI;
     }
 
     @Override
     public int getParity() {
-        return 1; // Odd function: sin(-x) = -sin(x)
+        return 1;
     }
 
     @Override
     public SinFunctionInterface getDerivative() {
-        return new CosFunctionStubAdapter(); // The derivative of sin(x) is cos(x)
+        return new CosFunctionStubAdapter();
     }
 
-    // Adapter class to represent cosine as derivative of sine
     private static class CosFunctionStubAdapter implements SinFunctionInterface {
         @Override
         public double calculate(double x, double epsilon) throws IllegalArgumentException {
@@ -118,12 +107,12 @@ public class SinFunctionStub implements SinFunctionInterface {
 
         @Override
         public int getParity() {
-            return 0; // Even function
+            return 0;
         }
 
         @Override
         public SinFunctionInterface getDerivative() {
-            return new NegativeSinStubAdapter(); // Derivative of cos(x) is -sin(x)
+            return new NegativeSinStubAdapter();
         }
     }
 
@@ -146,12 +135,12 @@ public class SinFunctionStub implements SinFunctionInterface {
 
         @Override
         public int getParity() {
-            return 1; // Still odd function
+            return 1;
         }
 
         @Override
         public SinFunctionInterface getDerivative() {
-            return new NegativeCosFunctionStubAdapter(); // Derivative of -sin(x) is -cos(x)
+            return new NegativeCosFunctionStubAdapter();
         }
     }
 
@@ -174,12 +163,12 @@ public class SinFunctionStub implements SinFunctionInterface {
 
         @Override
         public int getParity() {
-            return 0; // Still even function
+            return 0;
         }
 
         @Override
         public SinFunctionInterface getDerivative() {
-            return new SinFunctionStub(); // Derivative of -cos(x) is sin(x)
+            return new SinFunctionStub();
         }
     }
 }

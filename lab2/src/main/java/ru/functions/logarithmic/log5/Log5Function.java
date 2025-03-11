@@ -9,7 +9,6 @@ import ru.functions.utils.MathUtils;
  */
 public class Log5Function implements Log5FunctionInterface {
     private final LnFunction lnFunction;
-    // More precise value of ln(5)
     private static final double LN_5 = 1.6094379124341003746007593332261876395256013542685177219426;
 
     public Log5Function() {
@@ -26,17 +25,13 @@ public class Log5Function implements Log5FunctionInterface {
             throw new IllegalArgumentException("Input value " + x + " is outside the domain of log base 5");
         }
 
-        // Special cases for exact powers of 5
         if (isPowerOfFive(x)) {
             return getExactLog5(x);
         }
 
         // log_5(x) = ln(x) / ln(5)
-        // Use a tighter epsilon for ln(x) calculation
         double result = lnFunction.calculate(x, epsilon / 10) / LN_5;
 
-        // For values that should produce integer results (powers of 5)
-        // round to the nearest integer if we're very close
         double rounded = Math.round(result);
         if (Math.abs(result - rounded) < epsilon && isPowerOfFive(Math.pow(5, rounded))) {
             return rounded;
@@ -45,12 +40,10 @@ public class Log5Function implements Log5FunctionInterface {
         return result;
     }
 
-    // Helper method to check if a number is a power of 5
     private boolean isPowerOfFive(double x) {
         if (x <= 0)
             return false;
 
-        // Check exact powers of 5 up to 5^13 (representable in double)
         if (x == 1.0 || x == 5.0 || x == 25.0 || x == 125.0 ||
                 x == 625.0 || x == 3125.0 || x == 15625.0 ||
                 x == 78125.0 || x == 390625.0 || x == 1953125.0 ||
@@ -62,7 +55,6 @@ public class Log5Function implements Log5FunctionInterface {
         return false;
     }
 
-    // For exact powers of 5, return the exact logarithm
     private double getExactLog5(double x) {
         if (x == 1.0)
             return 0.0;
@@ -93,7 +85,6 @@ public class Log5Function implements Log5FunctionInterface {
         if (x == 1220703125.0)
             return 13.0;
 
-        // Calculate manually if we somehow got a different power of 5
         double temp = x;
         int exponent = 0;
 
@@ -109,12 +100,10 @@ public class Log5Function implements Log5FunctionInterface {
             exponent--;
         }
 
-        // If we have exactly 1.0, we have a power of 5
         if (Math.abs(temp - 1.0) < 1e-10) {
             return exponent;
         }
 
-        // If we get here, use ln method with high precision
         return lnFunction.calculate(x, 1e-15) / LN_5;
     }
 
@@ -135,10 +124,9 @@ public class Log5Function implements Log5FunctionInterface {
         }
 
         if (MathUtils.areEqual(newBase, 5.0, 1e-10)) {
-            return this; // Already base 5
+            return this;
         }
 
-        // Create a new logarithm with the specified base
         return new LogarithmWithBase(this, newBase);
     }
 

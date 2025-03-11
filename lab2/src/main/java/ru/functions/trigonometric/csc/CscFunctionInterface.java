@@ -2,9 +2,6 @@ package ru.functions.trigonometric.csc;
 
 import ru.functions.utils.Function;
 
-/**
- * Interface for cosecant function and related functions in the csc package
- */
 public interface CscFunctionInterface extends Function {
     /**
      * Gets the period of the trigonometric function

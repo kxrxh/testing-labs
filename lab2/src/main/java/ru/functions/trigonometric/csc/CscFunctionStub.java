@@ -6,9 +6,6 @@ import ru.functions.utils.MathUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Stub implementation of cosecant function using predefined table values
- */
 public class CscFunctionStub implements CscFunctionInterface {
     private final Map<Double, Double> cscValues;
     private SinFunctionStub sinFunctionStub;
@@ -36,11 +33,9 @@ public class CscFunctionStub implements CscFunctionInterface {
         cscValues.put(11 * Math.PI / 6, -2.0);
         // cscValues.put(2 * Math.PI, Double.POSITIVE_INFINITY); // Undefined
 
-        // Add more values for better coverage
         for (double x = -2 * Math.PI; x <= 2 * Math.PI; x += Math.PI / 12) {
-            double roundedX = Math.round(x * 1000.0) / 1000.0; // Round to 3 decimal places
+            double roundedX = Math.round(x * 1000.0) / 1000.0;
 
-            // Skip values where sin(x) is close to 0
             if (!isInDomain(roundedX)) {
                 continue;
             }
@@ -65,13 +60,10 @@ public class CscFunctionStub implements CscFunctionInterface {
             throw new IllegalArgumentException("Input value is outside the domain of cosecant function");
         }
 
-        // Normalize to [-2π, 2π] range
         x = MathUtils.normalizeAngle(x);
 
-        // Round to 3 decimal places for table lookup
         double roundedX = Math.round(x * 1000.0) / 1000.0;
 
-        // Check if we have an exact value in our table
         if (cscValues.containsKey(roundedX)) {
             return cscValues.get(roundedX);
         }
@@ -98,17 +90,16 @@ public class CscFunctionStub implements CscFunctionInterface {
 
     @Override
     public double getPeriod() {
-        return MathUtils.TWO_PI; // 2π
+        return MathUtils.TWO_PI;
     }
 
     @Override
     public int getParity() {
-        return 1; // Odd function: csc(-x) = -csc(x)
+        return 1;
     }
 
     @Override
     public CscFunctionInterface getDerivative() {
-        // The derivative of csc(x) is -csc(x)cot(x)
         return new NegativeCscCotProductStubAdapter();
     }
 
@@ -156,12 +147,11 @@ public class CscFunctionStub implements CscFunctionInterface {
 
         @Override
         public int getParity() {
-            return 0; // Even function: -csc(-x)cot(-x) = -csc(x)cot(x)
+            return 0;
         }
 
         @Override
         public CscFunctionInterface getDerivative() {
-            // For simplicity, we'll return null for the second derivative
             return null;
         }
     }

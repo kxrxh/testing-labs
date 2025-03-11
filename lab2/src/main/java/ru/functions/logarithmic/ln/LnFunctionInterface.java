@@ -2,10 +2,6 @@ package ru.functions.logarithmic.ln;
 
 import ru.functions.utils.Function;
 
-/**
- * Interface for natural logarithm function and related functions in the ln
- * package
- */
 public interface LnFunctionInterface extends Function {
     /**
      * Gets the base of the logarithm

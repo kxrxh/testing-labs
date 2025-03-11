@@ -14,13 +14,11 @@ public class SinFunction implements SinFunctionInterface {
             throw new IllegalArgumentException("Input value is outside the domain of sine function");
         }
 
-        // Normalize x to [-PI, PI] to improve convergence
         x = MathUtils.normalizeAngle(x);
 
-        // For large inputs, we need more terms in the series for accuracy
         double adjustedEpsilon = epsilon;
         if (Math.abs(x) > 100) {
-            adjustedEpsilon = epsilon / 100; // Increase precision for large values
+            adjustedEpsilon = epsilon / 100;
         }
 
         double result = 0.0;
@@ -31,11 +29,9 @@ public class SinFunction implements SinFunctionInterface {
         while (Math.abs(term) > adjustedEpsilon) {
             result += term;
 
-            // Calculate next term
             term = -term * x * x / ((2 * n) * (2 * n + 1));
             n++;
 
-            // Prevent infinite loops for very large values
             if (n > 100)
                 break;
         }
@@ -45,26 +41,24 @@ public class SinFunction implements SinFunctionInterface {
 
     @Override
     public boolean isInDomain(double x) {
-        // Sin(x) is defined for all real numbers, but not for infinity
         return !Double.isInfinite(x) && !Double.isNaN(x);
     }
 
     @Override
     public double getPeriod() {
-        return MathUtils.TWO_PI; // 2π
+        return MathUtils.TWO_PI;
     }
 
     @Override
     public int getParity() {
-        return 1; // Odd function: sin(-x) = -sin(x)
+        return 1;
     }
 
     @Override
     public SinFunctionInterface getDerivative() {
-        return new CosFunctionAdapter(); // The derivative of sin(x) is cos(x)
+        return new CosFunctionAdapter();
     }
 
-    // An adapter to represent cos(x) in terms of the sin package interface
     private static class CosFunctionAdapter implements SinFunctionInterface {
         @Override
         public double calculate(double x, double epsilon) throws IllegalArgumentException {
@@ -84,12 +78,12 @@ public class SinFunction implements SinFunctionInterface {
 
         @Override
         public int getParity() {
-            return 0; // Even function
+            return 0;
         }
 
         @Override
         public SinFunctionInterface getDerivative() {
-            return new NegativeSinAdapter(); // Derivative of cos(x) is -sin(x)
+            return new NegativeSinAdapter();
         }
     }
 
@@ -112,12 +106,12 @@ public class SinFunction implements SinFunctionInterface {
 
         @Override
         public int getParity() {
-            return 1; // Still odd function
+            return 1;
         }
 
         @Override
         public SinFunctionInterface getDerivative() {
-            return new NegativeCosFunctionAdapter(); // Derivative of -sin(x) is -cos(x)
+            return new NegativeCosFunctionAdapter();
         }
     }
 
@@ -140,12 +134,12 @@ public class SinFunction implements SinFunctionInterface {
 
         @Override
         public int getParity() {
-            return 0; // Still even function
+            return 0;
         }
 
         @Override
         public SinFunctionInterface getDerivative() {
-            return new SinFunction(); // Derivative of -cos(x) is sin(x)
+            return new SinFunction();
         }
     }
 }

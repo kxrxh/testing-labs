@@ -23,7 +23,6 @@ import java.util.Scanner;
 public class FunctionApp {
 
     public static void main(String[] args) {
-        // Create function instances
         SinFunction sinFunction = new SinFunction();
         CosFunction cosFunction = new CosFunction(sinFunction);
         SecFunction secFunction = new SecFunction(cosFunction);
@@ -43,10 +42,8 @@ public class FunctionApp {
         SystemFunction systemFunction = new SystemFunction(
                 negativeDomainFunction, positiveDomainFunction);
 
-        // Create CSV writer
         CSVWriter csvWriter = new CSVWriter(",");
 
-        // Set up user interface
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
@@ -110,7 +107,7 @@ public class FunctionApp {
         double epsilon = scanner.nextDouble();
 
         System.out.print("Enter output file name: ");
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
         String fileName = scanner.nextLine();
 
         try {

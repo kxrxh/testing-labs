@@ -24,29 +24,26 @@ public class CosFunction implements CosFunctionInterface {
             throw new IllegalArgumentException("Input value is outside the domain of cosine function");
         }
 
-        // cos(x) = sin(x + π/2)
         return sinFunction.calculate(x + MathUtils.HALF_PI, epsilon);
     }
 
     @Override
     public boolean isInDomain(double x) {
-        // Cos(x) is defined for all real numbers
         return true;
     }
 
     @Override
     public double getPeriod() {
-        return MathUtils.TWO_PI; // 2π
+        return MathUtils.TWO_PI;
     }
 
     @Override
     public int getParity() {
-        return 0; // Even function: cos(-x) = cos(x)
+        return 0;
     }
 
     @Override
     public CosFunctionInterface getDerivative() {
-        // The derivative of cos(x) is -sin(x)
         return new NegativeSinAdapter(sinFunction);
     }
 
@@ -86,12 +83,11 @@ public class CosFunction implements CosFunctionInterface {
 
         @Override
         public int getParity() {
-            return 1; // Odd function: -sin(-x) = sin(x)
+            return 1;
         }
 
         @Override
         public CosFunctionInterface getDerivative() {
-            // The derivative of -sin(x) is -cos(x)
             return new NegativeCosAdapter();
         }
     }
@@ -119,12 +115,11 @@ public class CosFunction implements CosFunctionInterface {
 
         @Override
         public int getParity() {
-            return 0; // Even function: -cos(-x) = -cos(x)
+            return 0;
         }
 
         @Override
         public CosFunctionInterface getDerivative() {
-            // The derivative of -cos(x) is sin(x)
             return new SinAdapter(cosFunction.getSinFunction());
         }
     }
@@ -156,12 +151,11 @@ public class CosFunction implements CosFunctionInterface {
 
         @Override
         public int getParity() {
-            return 1; // Odd function: sin(-x) = -sin(x)
+            return 1;
         }
 
         @Override
         public CosFunctionInterface getDerivative() {
-            // The derivative of sin(x) is cos(x)
             return new CosFunction(sinFunction);
         }
     }

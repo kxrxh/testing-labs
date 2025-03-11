@@ -2,9 +2,6 @@ package ru.functions.trigonometric.sin;
 
 import ru.functions.utils.Function;
 
-/**
- * Interface for sine function and related functions in the sin package
- */
 public interface SinFunctionInterface extends Function {
     /**
      * Gets the period of the trigonometric function

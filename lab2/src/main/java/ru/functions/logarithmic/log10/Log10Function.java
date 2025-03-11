@@ -9,7 +9,7 @@ import ru.functions.utils.MathUtils;
  */
 public class Log10Function implements Log10FunctionInterface {
     private final LnFunction lnFunction;
-    // More precise value of ln(10)
+
     private static final double LN_10 = 2.302585092994045684017991454684364207601101488628772976033;
 
     public Log10Function() {
@@ -26,17 +26,13 @@ public class Log10Function implements Log10FunctionInterface {
             throw new IllegalArgumentException("Input value " + x + " is outside the domain of log base 10");
         }
 
-        // Special cases for exact powers of 10
         if (isPowerOfTen(x)) {
             return getExactLog10(x);
         }
 
         // log_10(x) = ln(x) / ln(10)
-        // Use a tighter epsilon for ln(x) calculation
         double result = lnFunction.calculate(x, epsilon / 10) / LN_10;
 
-        // For values that should produce integer results (powers of 10)
-        // round to the nearest integer if we're very close
         double rounded = Math.round(result);
         if (Math.abs(result - rounded) < epsilon && isPowerOfTen(Math.pow(10, rounded))) {
             return rounded;
@@ -45,12 +41,10 @@ public class Log10Function implements Log10FunctionInterface {
         return result;
     }
 
-    // Helper method to check if a number is a power of 10
     private boolean isPowerOfTen(double x) {
         if (x <= 0)
             return false;
 
-        // Check exact powers of 10 up to 10^15 (representable exactly in double)
         if (x == 1.0 || x == 10.0 || x == 100.0 || x == 1000.0 ||
                 x == 10000.0 || x == 100000.0 || x == 1000000.0 ||
                 x == 10000000.0 || x == 100000000.0 || x == 1000000000.0 ||
@@ -62,7 +56,6 @@ public class Log10Function implements Log10FunctionInterface {
         return false;
     }
 
-    // For exact powers of 10, return the exact logarithm
     private double getExactLog10(double x) {
         if (x == 1.0)
             return 0.0;
@@ -97,8 +90,6 @@ public class Log10Function implements Log10FunctionInterface {
         if (x == 1000000000000000.0)
             return 15.0;
 
-        // Calculate manually if we somehow got a different power of 10
-        // Count the number of digits in the integer part
         double temp = x;
         int exponent = 0;
 
@@ -119,7 +110,6 @@ public class Log10Function implements Log10FunctionInterface {
             return exponent;
         }
 
-        // If we get here, use ln method
         return lnFunction.calculate(x, 1e-15) / LN_10;
     }
 
@@ -140,10 +130,9 @@ public class Log10Function implements Log10FunctionInterface {
         }
 
         if (MathUtils.areEqual(newBase, 10.0, 1e-10)) {
-            return this; // Already base 10
+            return this;
         }
 
-        // Create a new logarithm with the specified base
         return new LogarithmWithBase(this, newBase);
     }
 

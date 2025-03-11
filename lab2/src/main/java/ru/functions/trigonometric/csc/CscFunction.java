@@ -38,46 +38,38 @@ public class CscFunction implements CscFunctionInterface {
     public boolean isInDomain(double x) {
         // Csc(x) is defined for all x where sin(x) ≠ 0
         // This means x ≠ nπ for integer n
-
-        // Normalize x to [-π, π] for easier checking
         double normalizedX = MathUtils.normalizeAngle(x);
 
-        // Check if x is close to 0 or π (or -π)
         double tolerance = 1e-10;
 
-        // Check if x is close to 0
         if (Math.abs(normalizedX) < tolerance) {
             return false;
         }
 
-        // Check if x is close to π or -π
         if (Math.abs(Math.abs(normalizedX) - Math.PI) < tolerance) {
             return false;
         }
 
-        // Additional safety check: calculate sin(x) and see if it's close to zero
         try {
             double sinValue = sinFunction.calculate(x, tolerance);
             return Math.abs(sinValue) > tolerance;
         } catch (Exception e) {
-            // If sin calculation fails, assume x is not in domain
             return false;
         }
     }
 
     @Override
     public double getPeriod() {
-        return MathUtils.TWO_PI; // 2π
+        return MathUtils.TWO_PI;
     }
 
     @Override
     public int getParity() {
-        return 1; // Odd function: csc(-x) = -csc(x)
+        return 1;
     }
 
     @Override
     public CscFunctionInterface getDerivative() {
-        // The derivative of csc(x) is -csc(x)cot(x)
         return new NegativeCscCotProductAdapter();
     }
 
@@ -125,13 +117,11 @@ public class CscFunction implements CscFunctionInterface {
 
         @Override
         public int getParity() {
-            return 0; // Even function: -csc(-x)cot(-x) = -csc(x)cot(x)
+            return 0;
         }
 
         @Override
         public CscFunctionInterface getDerivative() {
-            // The derivative of -csc(x)cot(x) is -csc^3(x) - csc(x)cot^2(x)
-            // For simplicity, we'll return a basic implementation
             return new CscDerivativeAdapter();
         }
     }
@@ -172,12 +162,11 @@ public class CscFunction implements CscFunctionInterface {
 
         @Override
         public int getParity() {
-            return 1; // Odd function
+            return 1;
         }
 
         @Override
         public CscFunctionInterface getDerivative() {
-            // For simplicity, we'll return null for the third derivative
             return null;
         }
     }

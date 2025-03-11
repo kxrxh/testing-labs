@@ -13,7 +13,6 @@ public class SystemFunction implements SystemFunctionInterface {
     private final Function negativeDomainFunction;
     private final Function positiveDomainFunction;
 
-    // Domain and formula descriptions
     private static final String[] DOMAIN_DESCRIPTIONS = {
             "x ≤ 0, x ≠ -π/2, -π, -3π/2, ...",
             "x > 0"
@@ -24,8 +23,6 @@ public class SystemFunction implements SystemFunctionInterface {
             "(((((log_2(x) + log_10(x)) ^ 2) - log_2(x)) - log_10(x)) - log_5(x))"
     };
 
-    // Constructor that accepts any Function implementations for both domain
-    // functions
     public SystemFunction(
             Function negativeDomainFunction,
             Function positiveDomainFunction) {
@@ -33,21 +30,18 @@ public class SystemFunction implements SystemFunctionInterface {
         this.positiveDomainFunction = positiveDomainFunction;
     }
 
-    // Constructor for backward compatibility with existing code
     public SystemFunction(
             NegativeDomainFunction negativeDomainFunction,
             PositiveDomainFunction positiveDomainFunction) {
         this((Function) negativeDomainFunction, (Function) positiveDomainFunction);
     }
 
-    // Constructor for mixed real and stub implementations
     public SystemFunction(
             NegativeDomainFunction negativeDomainFunction,
             PositiveDomainFunctionStub positiveDomainFunctionStub) {
         this((Function) negativeDomainFunction, (Function) positiveDomainFunctionStub);
     }
 
-    // Constructor for mixed stub and real implementations
     public SystemFunction(
             NegativeDomainFunctionStub negativeDomainFunctionStub,
             PositiveDomainFunction positiveDomainFunction) {
@@ -60,7 +54,6 @@ public class SystemFunction implements SystemFunctionInterface {
             throw new IllegalArgumentException("Input value " + x + " is outside the domain of the system function");
         }
 
-        // Use the appropriate function based on the domain
         if (x <= 0) {
             return negativeDomainFunction.calculate(x, epsilon);
         } else {
@@ -73,15 +66,11 @@ public class SystemFunction implements SystemFunctionInterface {
         // The system function is defined in the union of both domains,
         // excluding x = 0 and x = -π/2, -π, -3π/2, ...
 
-        // Exactly zero is not in the domain
         if (x == 0.0) {
             return false;
         }
 
-        // For values very close to zero, be careful
         if (Math.abs(x) < 1e-10) {
-            // Allow very small negative values but not very small positive ones
-            // as these might cause numerical issues with logarithms
             return x < 0;
         }
 
@@ -94,13 +83,13 @@ public class SystemFunction implements SystemFunctionInterface {
 
     @Override
     public int getSubFunctionCount() {
-        return 2; // Two sub-functions: negative domain and positive domain
+        return 2;
     }
 
     @Override
     public int getApplicableSubFunction(double x) {
         if (!isInDomain(x)) {
-            return -1; // Outside domain
+            return -1;
         }
 
         return (x <= 0) ? 0 : 1; // 0 for negative domain, 1 for positive domain
@@ -136,6 +125,6 @@ public class SystemFunction implements SystemFunctionInterface {
 
     @Override
     public boolean isUsingStubs() {
-        return false; // This is the real implementation, not a stub
+        return false;
     }
 }

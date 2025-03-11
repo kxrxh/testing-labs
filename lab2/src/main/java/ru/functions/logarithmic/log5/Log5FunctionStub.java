@@ -5,17 +5,12 @@ import ru.functions.utils.MathUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Stub implementation of logarithm base 5 function using predefined table
- * values
- */
 public class Log5FunctionStub implements Log5FunctionInterface {
     private final Map<Double, Double> log5Values;
 
     public Log5FunctionStub() {
         log5Values = new HashMap<>();
 
-        // Special values for log5(x) at key points
         log5Values.put(1.0, 0.0);
         log5Values.put(5.0, 1.0);
         log5Values.put(25.0, 2.0);
@@ -27,7 +22,6 @@ public class Log5FunctionStub implements Log5FunctionInterface {
         log5Values.put(0.008, -3.0);
         log5Values.put(0.0016, -4.0);
 
-        // Common values
         log5Values.put(2.0, 0.43067655807339306);
         log5Values.put(3.0, 0.6826061944859288);
         log5Values.put(4.0, 0.8613531161467861);
@@ -37,9 +31,8 @@ public class Log5FunctionStub implements Log5FunctionInterface {
         log5Values.put(9.0, 1.3650127013394794);
         log5Values.put(10.0, 1.4306765580733931);
 
-        // Add more values for better coverage
         for (double x = 0.1; x <= 10.0; x += 0.1) {
-            double roundedX = Math.round(x * 100.0) / 100.0; // Round to 2 decimal places
+            double roundedX = Math.round(x * 100.0) / 100.0;
             if (!log5Values.containsKey(roundedX)) {
                 log5Values.put(roundedX, Math.log(roundedX) / Math.log(5));
             }
@@ -52,10 +45,8 @@ public class Log5FunctionStub implements Log5FunctionInterface {
             throw new IllegalArgumentException("Input value " + x + " is outside the domain of log base 5");
         }
 
-        // Round to 2 decimal places for table lookup
         double roundedX = Math.round(x * 100.0) / 100.0;
 
-        // Check if we have an exact value in our table
         if (log5Values.containsKey(roundedX)) {
             return log5Values.get(roundedX);
         }
@@ -80,7 +71,6 @@ public class Log5FunctionStub implements Log5FunctionInterface {
 
     @Override
     public boolean isInDomain(double x) {
-        // log5(x) is defined for x > 0
         return x > 0;
     }
 
@@ -96,10 +86,9 @@ public class Log5FunctionStub implements Log5FunctionInterface {
         }
 
         if (MathUtils.areEqual(newBase, 5.0, 1e-10)) {
-            return this; // Already base 5
+            return this;
         }
 
-        // Create a new logarithm with the specified base
         return new LogarithmWithBaseStub(this, newBase);
     }
 

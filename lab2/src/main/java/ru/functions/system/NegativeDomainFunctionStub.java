@@ -39,7 +39,6 @@ public class NegativeDomainFunctionStub implements Function {
         double sec = secFunctionStub.calculate(x, epsilon);
         double csc = cscFunctionStub.calculate(x, epsilon);
 
-        // Perform the step-by-step calculation with proper precision management
         double secTimesCsc = sec * csc;
         double secTimesCscDividedByCos = secTimesCsc / cos;
         double secTimesCscDividedByCosMinusSec = secTimesCscDividedByCos - sec;
@@ -51,12 +50,10 @@ public class NegativeDomainFunctionStub implements Function {
 
     @Override
     public boolean isInDomain(double x) {
-        // Domain: x ≤ 0 AND not a multiple of π/2 (for sec and csc)
         if (x > 0) {
             return false;
         }
 
-        // Check if x is in the domain of all component functions
         return secFunctionStub.isInDomain(x) && cscFunctionStub.isInDomain(x);
     }
 }
