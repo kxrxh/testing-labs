@@ -1,14 +1,21 @@
 package ru.functions.logarithmic.log10;
 
 import ru.functions.utils.MathUtils;
+import ru.functions.logarithmic.ln.LnFunctionStub;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Log10FunctionStub implements Log10FunctionInterface {
     private final Map<Double, Double> log10Values;
+    private final LnFunctionStub lnFunctionStub;
 
     public Log10FunctionStub() {
+        this(new LnFunctionStub());
+    }
+
+    public Log10FunctionStub(LnFunctionStub lnFunctionStub) {
+        this.lnFunctionStub = lnFunctionStub;
         log10Values = new HashMap<>();
 
         log10Values.put(1.0, 0.0);
@@ -47,27 +54,12 @@ public class Log10FunctionStub implements Log10FunctionInterface {
 
         double roundedX = Math.round(x * 100.0) / 100.0;
 
-        // Check if we have an exact value in our table
         if (log10Values.containsKey(roundedX)) {
             return log10Values.get(roundedX);
         }
 
-        // Find closest values and perform linear interpolation
-        double lowerKey = log10Values.keySet().stream()
-                .filter(k -> k < roundedX)
-                .max(Double::compare)
-                .orElse(0.1);
-
-        double upperKey = log10Values.keySet().stream()
-                .filter(k -> k > roundedX)
-                .min(Double::compare)
-                .orElse(10.0);
-
-        double lowerValue = log10Values.get(lowerKey);
-        double upperValue = log10Values.get(upperKey);
-
-        // Linear interpolation: y = y1 + (x - x1) * (y2 - y1) / (x2 - x1)
-        return lowerValue + (roundedX - lowerKey) * (upperValue - lowerValue) / (upperKey - lowerKey);
+        // Use ln(x)/ln(10) for values not in the table
+        return lnFunctionStub.calculate(x, epsilon) / lnFunctionStub.calculate(10.0, epsilon);
     }
 
     @Override

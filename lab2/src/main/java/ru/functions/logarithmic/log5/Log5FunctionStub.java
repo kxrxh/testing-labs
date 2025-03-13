@@ -1,14 +1,21 @@
 package ru.functions.logarithmic.log5;
 
 import ru.functions.utils.MathUtils;
+import ru.functions.logarithmic.ln.LnFunctionStub;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Log5FunctionStub implements Log5FunctionInterface {
     private final Map<Double, Double> log5Values;
+    private final LnFunctionStub lnFunctionStub;
 
     public Log5FunctionStub() {
+        this(new LnFunctionStub());
+    }
+
+    public Log5FunctionStub(LnFunctionStub lnFunctionStub) {
+        this.lnFunctionStub = lnFunctionStub;
         log5Values = new HashMap<>();
 
         log5Values.put(1.0, 0.0);
@@ -51,22 +58,8 @@ public class Log5FunctionStub implements Log5FunctionInterface {
             return log5Values.get(roundedX);
         }
 
-        // Find closest values and perform linear interpolation
-        double lowerKey = log5Values.keySet().stream()
-                .filter(k -> k < roundedX)
-                .max(Double::compare)
-                .orElse(0.1);
-
-        double upperKey = log5Values.keySet().stream()
-                .filter(k -> k > roundedX)
-                .min(Double::compare)
-                .orElse(10.0);
-
-        double lowerValue = log5Values.get(lowerKey);
-        double upperValue = log5Values.get(upperKey);
-
-        // Linear interpolation: y = y1 + (x - x1) * (y2 - y1) / (x2 - x1)
-        return lowerValue + (roundedX - lowerKey) * (upperValue - lowerValue) / (upperKey - lowerKey);
+        // Use ln(x)/ln(5) for values not in the table
+        return lnFunctionStub.calculate(x, epsilon) / lnFunctionStub.calculate(5.0, epsilon);
     }
 
     @Override

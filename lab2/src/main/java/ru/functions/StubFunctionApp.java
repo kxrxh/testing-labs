@@ -30,9 +30,9 @@ public class StubFunctionApp {
         CscFunctionStub cscFunctionStub = new CscFunctionStub(sinFunctionStub);
 
         LnFunctionStub lnFunctionStub = new LnFunctionStub();
-        Log2FunctionStub log2FunctionStub = new Log2FunctionStub();
-        Log10FunctionStub log10FunctionStub = new Log10FunctionStub();
-        Log5FunctionStub log5FunctionStub = new Log5FunctionStub();
+        Log2FunctionStub log2FunctionStub = new Log2FunctionStub(lnFunctionStub);
+        Log10FunctionStub log10FunctionStub = new Log10FunctionStub(lnFunctionStub);
+        Log5FunctionStub log5FunctionStub = new Log5FunctionStub(lnFunctionStub);
 
         NegativeDomainFunctionStub negativeDomainFunctionStub = new NegativeDomainFunctionStub(
                 sinFunctionStub, cosFunctionStub, secFunctionStub, cscFunctionStub);
@@ -104,11 +104,8 @@ public class StubFunctionApp {
         System.out.print("Enter step size: ");
         double step = scanner.nextDouble();
 
-        System.out.print("Enter precision (e.g., 1e-6): ");
-        double epsilon = scanner.nextDouble();
-
         System.out.print("Enter output file name: ");
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
         String fileName = scanner.nextLine();
 
         try {

@@ -17,9 +17,6 @@ import ru.functions.utils.Function;
 import java.io.IOException;
 import java.util.Scanner;
 
-/**
- * Main application class
- */
 public class FunctionApp {
 
     public static void main(String[] args) {
@@ -102,9 +99,6 @@ public class FunctionApp {
 
         System.out.print("Enter step size: ");
         double step = scanner.nextDouble();
-
-        System.out.print("Enter precision (e.g., 1e-6): ");
-        double epsilon = scanner.nextDouble();
 
         System.out.print("Enter output file name: ");
         scanner.nextLine();

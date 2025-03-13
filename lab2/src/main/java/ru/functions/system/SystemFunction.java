@@ -1,7 +1,6 @@
 package ru.functions.system;
 
 import ru.functions.utils.Function;
-import ru.functions.utils.MathUtils;
 
 /**
  * The main system function that combines both domains:

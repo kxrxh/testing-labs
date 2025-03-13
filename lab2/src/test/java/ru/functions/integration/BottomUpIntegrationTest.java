@@ -11,7 +11,6 @@ import ru.functions.logarithmic.log5.Log5Function;
 import ru.functions.system.NegativeDomainFunction;
 import ru.functions.system.PositiveDomainFunction;
 import ru.functions.system.SystemFunction;
-import ru.functions.system.SystemFunctionInterface;
 import ru.functions.trigonometric.cos.CosFunction;
 import ru.functions.trigonometric.csc.CscFunction;
 import ru.functions.trigonometric.sec.SecFunction;
@@ -549,6 +548,34 @@ public class BottomUpIntegrationTest {
 
         assertFalse(systemFunction.isInDomain(0.0), "x = 0 should not be in the domain");
         assertFalse(systemFunction.isInDomain(-Math.PI / 2), "x = -π/2 should not be in the domain");
+
+        double nearZeroNeg = -1e-10;
+        double nearZeroPos = 1e-10;
+
+        assertTrue(systemFunction.isInDomain(nearZeroNeg),
+                "x = " + nearZeroNeg + " should be in the domain");
+        assertTrue(systemFunction.isInDomain(nearZeroPos),
+                "x = " + nearZeroPos + " should be in the domain");
+
+        double nearPiOver2 = -Math.PI / 2 + 1e-10;
+        double nearPi = -Math.PI + 1e-10;
+
+        assertFalse(systemFunction.isInDomain(-Math.PI / 2),
+                "x = -π/2 should not be in the domain");
+        assertFalse(systemFunction.isInDomain(-Math.PI),
+                "x = -π should not be in the domain");
+
+        assertTrue(systemFunction.isInDomain(nearPiOver2),
+                "x = " + nearPiOver2 + " should be in the domain");
+        assertTrue(systemFunction.isInDomain(nearPi),
+                "x = " + nearPi + " should be in the domain");
+
+        double verySmallPositive = 1e-5;
+        assertTrue(systemFunction.isInDomain(verySmallPositive),
+                "Small positive value " + verySmallPositive + " should be in the domain");
+        double result = systemFunction.calculate(verySmallPositive, EPSILON);
+        assertTrue(Double.isFinite(result),
+                "Result for very small positive value should be finite");
     }
 
     /**
@@ -636,26 +663,26 @@ public class BottomUpIntegrationTest {
         double nearZeroPos = 1e-10;
 
         assertTrue(systemFunction.isInDomain(nearZeroNeg),
-                "x = " + nearZeroNeg + " should be in domain");
+                "x = " + nearZeroNeg + " should be in the domain");
         assertTrue(systemFunction.isInDomain(nearZeroPos),
-                "x = " + nearZeroPos + " should be in domain");
+                "x = " + nearZeroPos + " should be in the domain");
 
         double nearPiOver2 = -Math.PI / 2 + 1e-10;
         double nearPi = -Math.PI + 1e-10;
 
         assertFalse(systemFunction.isInDomain(-Math.PI / 2),
-                "x = -π/2 should not be in domain");
+                "x = -π/2 should not be in the domain");
         assertFalse(systemFunction.isInDomain(-Math.PI),
-                "x = -π should not be in domain");
+                "x = -π should not be in the domain");
 
-        assertTrue(systemFunction.isInDomain(-Math.PI / 2 + 0.01),
-                "x = -π/2 + 0.01 should be in domain");
-        assertTrue(systemFunction.isInDomain(-Math.PI + 0.01),
-                "x = -π + 0.01 should be in domain");
+        assertTrue(systemFunction.isInDomain(nearPiOver2),
+                "x = " + nearPiOver2 + " should be in the domain");
+        assertTrue(systemFunction.isInDomain(nearPi),
+                "x = " + nearPi + " should be in the domain");
 
         double verySmallPositive = 1e-5;
         assertTrue(systemFunction.isInDomain(verySmallPositive),
-                "Small positive value " + verySmallPositive + " should be in domain");
+                "Small positive value " + verySmallPositive + " should be in the domain");
         double result = systemFunction.calculate(verySmallPositive, EPSILON);
         assertTrue(Double.isFinite(result),
                 "Result for very small positive value should be finite");
@@ -691,7 +718,7 @@ public class BottomUpIntegrationTest {
 
         for (double x : new double[] { -Math.PI / 2 + 0.01, -Math.PI + 0.01, -3 * Math.PI / 2 + 0.01 }) {
             assertTrue(systemFunction.isInDomain(x),
-                    "System function domain should include " + x);
+                    "x = " + x + " should be in the domain");
         }
     }
 }

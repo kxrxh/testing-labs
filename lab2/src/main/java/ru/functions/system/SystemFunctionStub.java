@@ -37,7 +37,6 @@ public class SystemFunctionStub implements SystemFunctionInterface {
             throw new IllegalArgumentException("Input value " + x + " is outside the domain of the system function");
         }
 
-        // Use the appropriate function based on the domain
         if (x <= 0) {
             return negativeDomainFunctionStub.calculate(x, epsilon);
         } else {
@@ -72,7 +71,7 @@ public class SystemFunctionStub implements SystemFunctionInterface {
             return -1;
         }
 
-        return (x <= 0) ? 0 : 1; // 0 for negative domain, 1 for positive domain
+        return (x <= 0) ? 0 : 1; // 0 - negative domain, 1 - positive domain
     }
 
     @Override

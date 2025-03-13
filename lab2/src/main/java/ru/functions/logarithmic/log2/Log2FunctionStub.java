@@ -1,14 +1,21 @@
 package ru.functions.logarithmic.log2;
 
 import ru.functions.utils.MathUtils;
+import ru.functions.logarithmic.ln.LnFunctionStub;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Log2FunctionStub implements Log2FunctionInterface {
     private final Map<Double, Double> log2Values;
+    private final LnFunctionStub lnFunctionStub;
 
     public Log2FunctionStub() {
+        this(new LnFunctionStub());
+    }
+
+    public Log2FunctionStub(LnFunctionStub lnFunctionStub) {
+        this.lnFunctionStub = lnFunctionStub;
         log2Values = new HashMap<>();
 
         log2Values.put(1.0, 0.0);
@@ -55,22 +62,8 @@ public class Log2FunctionStub implements Log2FunctionInterface {
             return log2Values.get(roundedX);
         }
 
-        // Find closest values and perform linear interpolation
-        double lowerKey = log2Values.keySet().stream()
-                .filter(k -> k < roundedX)
-                .max(Double::compare)
-                .orElse(0.1);
-
-        double upperKey = log2Values.keySet().stream()
-                .filter(k -> k > roundedX)
-                .min(Double::compare)
-                .orElse(10.0);
-
-        double lowerValue = log2Values.get(lowerKey);
-        double upperValue = log2Values.get(upperKey);
-
-        // Linear interpolation: y = y1 + (x - x1) * (y2 - y1) / (x2 - x1)
-        return lowerValue + (roundedX - lowerKey) * (upperValue - lowerValue) / (upperKey - lowerKey);
+        // Use ln(x)/ln(2) for values not in the table
+        return lnFunctionStub.calculate(x, epsilon) / lnFunctionStub.calculate(2.0, epsilon);
     }
 
     @Override

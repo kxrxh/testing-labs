@@ -1,7 +1,6 @@
 package ru.functions.trigonometric.sin;
 
 import ru.functions.utils.MathUtils;
-import ru.functions.utils.Function;
 
 /**
  * Implementation of sine function using Taylor series expansion
