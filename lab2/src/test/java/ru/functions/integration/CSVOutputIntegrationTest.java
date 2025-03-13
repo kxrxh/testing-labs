@@ -30,11 +30,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Integration test for CSV output functionality with the system function.
- * Tests if values calculated by the system function are correctly written to
- * CSV files.
- */
 @DisplayName("CSV Output Integration Test")
 class CSVOutputIntegrationTest {
     private static final double EPSILON = 1e-6;
@@ -48,7 +43,6 @@ class CSVOutputIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // Set up the complete system function with real implementations
         SinFunction sinFunction = new SinFunction();
         CosFunction cosFunction = new CosFunction(sinFunction);
         SecFunction secFunction = new SecFunction(cosFunction);

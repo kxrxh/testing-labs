@@ -125,11 +125,9 @@ public class SystemFunctionIntegrationTest {
         @Test
         @DisplayName("Test system function at boundary values")
         void testSystemFunctionAtBoundaries() {
-                // Test values close to x = 0 from both sides
                 double negativeClose = -0.0001;
                 double positiveClose = 0.0001;
 
-                // Check that the domain is correctly determined
                 assertTrue(systemFunction.isInDomain(negativeClose),
                                 "x = " + negativeClose + " should be in domain");
                 assertTrue(systemFunction.isInDomain(positiveClose),
