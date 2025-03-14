@@ -35,18 +35,6 @@ public class SystemFunction implements SystemFunctionInterface {
         this((Function) negativeDomainFunction, (Function) positiveDomainFunction);
     }
 
-    public SystemFunction(
-            NegativeDomainFunction negativeDomainFunction,
-            PositiveDomainFunctionStub positiveDomainFunctionStub) {
-        this((Function) negativeDomainFunction, (Function) positiveDomainFunctionStub);
-    }
-
-    public SystemFunction(
-            NegativeDomainFunctionStub negativeDomainFunctionStub,
-            PositiveDomainFunction positiveDomainFunction) {
-        this((Function) negativeDomainFunctionStub, (Function) positiveDomainFunction);
-    }
-
     @Override
     public double calculate(double x, double epsilon) throws IllegalArgumentException {
         if (!isInDomain(x)) {

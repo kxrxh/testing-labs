@@ -61,13 +61,28 @@ public class CSVWriter {
 
             double epsilon = 1e-6;
 
-            int numSteps = (int) Math.floor((end - start) / step) + 1;
+            // Calculate exact number of steps to ensure end point inclusion
+            // Add a small epsilon to ensure we include points that might be just at the
+            // boundary
+            int numSteps = (int) Math.ceil((end - start) / step + epsilon);
 
-            for (int i = 0; i < numSteps; i++) {
+            // Track if we've added the exact endpoint
+            boolean endPointAdded = false;
+
+            // Include points from start to just before end with step
+            for (int i = 0; i <= numSteps; i++) {
                 double x = start + i * step;
 
-                if (x > end + 1e-10) {
+                // Ensure we don't go beyond the end (with some tolerance for floating point
+                // issues)
+                if (x > end + epsilon) {
                     break;
+                }
+
+                // If this is very close to the end point, use the exact end value
+                if (Math.abs(x - end) < epsilon) {
+                    x = end;
+                    endPointAdded = true;
                 }
 
                 try {
@@ -78,6 +93,19 @@ public class CSVWriter {
                     }
                 } catch (IllegalArgumentException e) {
                     // Skip points outside the domain or where function is undefined
+                }
+            }
+
+            // Always explicitly include the end point if not already added
+            if (!endPointAdded) {
+                try {
+                    if (function.isInDomain(end)) {
+                        double y = function.calculate(end, epsilon);
+                        writer.write(end + separator + y);
+                        writer.newLine();
+                    }
+                } catch (IllegalArgumentException e) {
+                    // Skip if function is undefined at end
                 }
             }
         }
