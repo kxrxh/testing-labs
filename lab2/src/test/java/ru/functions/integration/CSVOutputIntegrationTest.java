@@ -61,14 +61,14 @@ class CSVOutputIntegrationTest {
         initializeRealSystemFunction();
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Configure Negative Domain: x={0}, expected={1}")
     @CsvFileSource(resources = "/mock_negative_domain.csv", numLinesToSkip = 1)
     void configureNegativeDomainMockValues(double x, double expected) {
         when(mockSystemFunction.isInDomain(eq(x))).thenReturn(true);
         when(mockSystemFunction.calculate(eq(x), anyDouble())).thenReturn(expected);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Configure Positive Domain: x={0}, expected={1}")
     @CsvFileSource(resources = "/mock_positive_domain.csv", numLinesToSkip = 1)
     void configurePositiveDomainMockValues(double x, double expected) {
         when(mockSystemFunction.isInDomain(eq(x))).thenReturn(true);

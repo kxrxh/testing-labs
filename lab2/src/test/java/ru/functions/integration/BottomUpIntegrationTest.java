@@ -41,7 +41,7 @@ public class BottomUpIntegrationTest {
      * Phase 1: Test base sin(x) function
      * Using the real implementation of SinFunction
      */
-    @ParameterizedTest
+    @ParameterizedTest(name = "Sin({0}) = {1}")
     @DisplayName("Phase 1: Base sin function integration test")
     @CsvFileSource(resources = "/sin_test_data.csv", numLinesToSkip = 1)
     void testSinBase(double angle, double expected) {
@@ -55,7 +55,7 @@ public class BottomUpIntegrationTest {
      * Phase 1: Test base ln(x) function
      * Using the real implementation of LnFunction
      */
-    @ParameterizedTest
+    @ParameterizedTest(name = "Ln({0}) = {1}")
     @DisplayName("Phase 1: Base ln function integration test")
     @CsvFileSource(resources = "/ln_test_data.csv", numLinesToSkip = 1)
     void testLnBase(double value, double expected) {
@@ -68,7 +68,7 @@ public class BottomUpIntegrationTest {
     /**
      * Phase 2: Test trigonometric derivatives - cos(x) integrated with sin(x)
      */
-    @ParameterizedTest
+    @ParameterizedTest(name = "Cos({0}) = {1}")
     @DisplayName("Phase 2: Trigonometric derivatives - cos function integration test")
     @CsvFileSource(resources = "/cos_test_data.csv", numLinesToSkip = 1)
     void testCosDerivation(double angle, double expected) {
@@ -84,7 +84,7 @@ public class BottomUpIntegrationTest {
      * Phase 2: Test trigonometric derivatives - sec(x) integrated with cos(x) and
      * sin(x)
      */
-    @ParameterizedTest
+    @ParameterizedTest(name = "Sec({0}) = {1}")
     @DisplayName("Phase 2: Trigonometric derivatives - sec function integration test")
     @CsvFileSource(resources = "/sec_test_data.csv", numLinesToSkip = 1)
     void testSecDerivation(double angle, double expected) {
@@ -105,7 +105,7 @@ public class BottomUpIntegrationTest {
     /**
      * Phase 2: Test trigonometric derivatives - csc(x) integrated with sin(x)
      */
-    @ParameterizedTest
+    @ParameterizedTest(name = "Csc({0}) = {1}")
     @DisplayName("Phase 2: Trigonometric derivatives - csc function integration test")
     @CsvFileSource(resources = "/csc_test_data.csv", numLinesToSkip = 1)
     void testCscDerivation(double angle, double expected) {
@@ -125,7 +125,7 @@ public class BottomUpIntegrationTest {
     /**
      * Phase 3: Test logarithmic derivatives - log2 integrated with ln
      */
-    @ParameterizedTest
+    @ParameterizedTest(name = "Log2({0}) = {1}")
     @DisplayName("Phase 3: Logarithmic derivatives - log2 function integration test")
     @CsvFileSource(resources = "/log2_test_data.csv", numLinesToSkip = 1)
     void testLog2Derivation(double value, double expected) {
@@ -140,7 +140,7 @@ public class BottomUpIntegrationTest {
     /**
      * Phase 3: Test logarithmic derivatives - log10 integrated with ln
      */
-    @ParameterizedTest
+    @ParameterizedTest(name = "Log10({0}) = {1}")
     @DisplayName("Phase 3: Logarithmic derivatives - log10 function integration test")
     @CsvFileSource(resources = "/log10_test_data.csv", numLinesToSkip = 1)
     void testLog10Derivation(double value, double expected) {
@@ -155,7 +155,7 @@ public class BottomUpIntegrationTest {
     /**
      * Phase 3: Test logarithmic derivatives - log5 integrated with ln
      */
-    @ParameterizedTest
+    @ParameterizedTest(name = "Log5({0}) = {1}")
     @DisplayName("Phase 3: Logarithmic derivatives - log5 function integration test")
     @CsvFileSource(resources = "/log5_test_data.csv", numLinesToSkip = 1)
     void testLog5Derivation(double value, double expected) {
@@ -170,7 +170,7 @@ public class BottomUpIntegrationTest {
     /**
      * Phase 4: Test negative domain function integration with all trig functions
      */
-    @ParameterizedTest
+    @ParameterizedTest(name = "NegativeDomain({0}) with sin={1}, cos={2}, sec={3}, csc={4} = {5}")
     @DisplayName("Phase 4: Negative domain function integration test")
     @CsvFileSource(resources = "/negative_domain_test_cases.csv", numLinesToSkip = 1)
     void testNegativeDomainIntegration(double x, double sin, double cos, double sec, double csc, double expected) {
@@ -211,7 +211,7 @@ public class BottomUpIntegrationTest {
     /**
      * Phase 4: Test positive domain function integration with all log functions
      */
-    @ParameterizedTest
+    @ParameterizedTest(name = "PositiveDomain({0}) with log2={1}, log10={2}, log5={3} = {4}")
     @DisplayName("Phase 4: Positive domain function integration test")
     @CsvFileSource(resources = "/positive_domain_test_cases.csv", numLinesToSkip = 1)
     void testPositiveDomainIntegration(double x, double log2, double log10, double log5, double expected) {

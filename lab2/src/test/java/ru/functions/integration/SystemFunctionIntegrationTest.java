@@ -126,7 +126,7 @@ public class SystemFunctionIntegrationTest {
                 assertFalse(systemFunction.isInDomain(-Math.PI));
         }
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "System Function at x={0} = {1}")
         @DisplayName("Phase 1: Test that the system function calculates correctly with mocked dependencies")
         @CsvFileSource(resources = "/system_function_test_cases.csv", numLinesToSkip = 1)
         void testCalculate(double x, double expected) {
