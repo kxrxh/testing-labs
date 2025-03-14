@@ -1,0 +1,6 @@
+value,description
+0.0,zero
+-0.1,negative decimal
+-1.0,negative one
+-10.0,negative ten
+-Infinity,negative infinity 

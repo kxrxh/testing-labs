@@ -1,0 +1,9 @@
+value,valid,description
+0.1,true,Small positive value
+1.0,true,One
+10.0,true,Medium positive value
+100.0,true,Large positive value
+0.0,false,Zero
+-0.1,false,Small negative value
+-1.0,false,Negative one
+-10.0,false,Large negative value 

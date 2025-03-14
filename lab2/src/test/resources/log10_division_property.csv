@@ -1,0 +1,6 @@
+x,y,description
+10.0,2.0,simple division
+100.0,10.0,power of base divided by base
+1000.0,100.0,powers of base
+6.0,3.0,small integers
+200.0,4.0,larger values 

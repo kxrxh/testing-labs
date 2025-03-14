@@ -1,0 +1,6 @@
+value,description
+0.0,Zero
+-0.1,Small negative value
+-1.0,Negative one
+-10.0,Large negative value
+-Infinity,Negative infinity 
