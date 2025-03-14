@@ -1,0 +1,10 @@
+x,description
+0.99,slightly less than one
+0.995,very close to one from below
+0.999,extremely close to one from below
+0.9999,very very close to one from below
+1.0,exactly one
+1.0001,very very close to one from above
+1.001,extremely close to one from above
+1.005,very close to one from above
+1.01,slightly more than one 

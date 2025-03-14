@@ -1,0 +1,9 @@
+a,b,description
+2.0,1.5,"Small positive values"
+3.0,2.5,"Small positive values"
+5.0,4.0,"Medium positive values"
+10.0,7.0,"Medium positive values"
+2.0,8.0,"Powers of 2"
+4.0,16.0,"Powers of 4"
+0.5,2.0,"Reciprocal values"
+100.0,0.01,"Large and small values" 

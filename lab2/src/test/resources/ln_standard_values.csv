@@ -1,0 +1,16 @@
+value,expected,description
+0.1,-2.3025850929940455,Small value less than 1
+0.2,-1.6094379124341003,Small value less than 1
+0.5,-0.6931471805599453,Value less than 1
+1.0,0.0,Natural log of 1 is 0
+1.5,0.4054651081081644,Value slightly greater than 1
+2.0,0.6931471805599453,Natural log of 2
+2.7182818284590451,1.0,Natural log of e is 1
+3.0,1.0986122886681098,Value greater than e
+5.0,1.6094379124341003,Medium value
+7.5,2.0149030205422647,Medium value
+10.0,2.302585092994046,Natural log of 10
+20.0,2.995732273553991,Medium-large value
+50.0,3.912023005428146,Large value
+100.0,4.605170185988092,Large value
+1000.0,6.907755278982137,Very large value 

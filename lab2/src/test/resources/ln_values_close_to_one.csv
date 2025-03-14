@@ -1,0 +1,10 @@
+value,description
+0.9,Slightly less than 1
+0.99,Very close to 1 (less)
+0.999,Extremely close to 1 (less)
+0.9999,Almost 1 (less)
+1.0,Exactly 1
+1.0001,Almost 1 (greater)
+1.001,Extremely close to 1 (greater)
+1.01,Very close to 1 (greater)
+1.1,Slightly greater than 1 

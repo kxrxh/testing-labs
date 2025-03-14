@@ -1,0 +1,10 @@
+value,valid,description
+-1.0,false,negative value
+0.0,false,zero
+0.00001,true,very small positive
+0.1,true,small fraction
+1.0,true,one
+10.0,true,base value
+100.0,true,power of base
+1000.0,true,large value
+Infinity,true,positive infinity 

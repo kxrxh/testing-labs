@@ -1,0 +1,9 @@
+value,valid,description
+0.1,true,small positive
+1.0,true,one
+10.0,true,ten
+100.0,true,hundred
+0.0,false,zero
+-0.1,false,negative decimal
+-1.0,false,negative one
+-10.0,false,negative ten 
