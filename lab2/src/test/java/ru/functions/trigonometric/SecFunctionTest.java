@@ -4,14 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import ru.functions.trigonometric.sec.SecFunction;
 import ru.functions.trigonometric.sec.SecFunctionInterface;
 import ru.functions.utils.MathUtils;
-
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,38 +21,18 @@ class SecFunctionTest {
         secFunction = new SecFunction();
     }
 
-    static Stream<Arguments> standardAnglesValues() {
-        return Stream.of(
-                // angle, expected sec value
-                Arguments.of(0.0, 1.0),
-                Arguments.of(MathUtils.PI / 6, 2.0 / Math.sqrt(3)),
-                Arguments.of(MathUtils.PI / 4, Math.sqrt(2)),
-                Arguments.of(MathUtils.PI / 3, 2.0),
-                Arguments.of(MathUtils.PI / 2, Double.POSITIVE_INFINITY), // Undefined at π/2
-                Arguments.of(2 * MathUtils.PI / 3, -2.0),
-                Arguments.of(3 * MathUtils.PI / 4, -Math.sqrt(2)),
-                Arguments.of(5 * MathUtils.PI / 6, -2.0 / Math.sqrt(3)),
-                Arguments.of(MathUtils.PI, -1.0),
-                Arguments.of(7 * MathUtils.PI / 6, -2.0 / Math.sqrt(3)),
-                Arguments.of(5 * MathUtils.PI / 4, -Math.sqrt(2)),
-                Arguments.of(4 * MathUtils.PI / 3, -2.0),
-                Arguments.of(3 * MathUtils.PI / 2, Double.POSITIVE_INFINITY), // Undefined at 3π/2
-                Arguments.of(5 * MathUtils.PI / 3, 2.0),
-                Arguments.of(7 * MathUtils.PI / 4, Math.sqrt(2)),
-                Arguments.of(11 * MathUtils.PI / 6, 2.0 / Math.sqrt(3)));
-    }
-
     @ParameterizedTest(name = "Sec({0}) should be {1}")
     @DisplayName("Sec function should calculate correctly for standard angles")
-    @MethodSource("standardAnglesValues")
-    void testSecForStandardAngles(double angle, double expected) {
-        // Skip test for values where sec is undefined (cos(x) = 0)
-        if (Double.isInfinite(expected)) {
+    @CsvFileSource(resources = "/sec_standard_angles.csv", numLinesToSkip = 1)
+    void testSecForStandardAngles(double angle, String expected, String description) {
+        // Handle "Infinity" value from CSV
+        if ("Infinity".equals(expected)) {
             assertThrows(IllegalArgumentException.class, () -> secFunction.calculate(angle, EPSILON),
                     "Sec(" + angle + ") should throw IllegalArgumentException");
         } else {
-            assertEquals(expected, secFunction.calculate(angle, EPSILON), EPSILON,
-                    "Sec(" + angle + ") should be " + expected);
+            double expectedValue = Double.parseDouble(expected);
+            assertEquals(expectedValue, secFunction.calculate(angle, EPSILON), EPSILON,
+                    "Sec(" + angle + ") should be " + expectedValue);
         }
     }
 
@@ -122,28 +99,10 @@ class SecFunctionTest {
         assertFalse(secFunction.isInDomain(Double.NEGATIVE_INFINITY));
     }
 
-    static Stream<Double> nonZeroCosValues() {
-        return Stream.of(
-                0.0,
-                MathUtils.PI / 6,
-                MathUtils.PI / 4,
-                MathUtils.PI / 3,
-                2 * MathUtils.PI / 3,
-                3 * MathUtils.PI / 4,
-                5 * MathUtils.PI / 6,
-                MathUtils.PI,
-                7 * MathUtils.PI / 6,
-                5 * MathUtils.PI / 4,
-                4 * MathUtils.PI / 3,
-                5 * MathUtils.PI / 3,
-                7 * MathUtils.PI / 4,
-                11 * MathUtils.PI / 6);
-    }
-
     @ParameterizedTest(name = "Sec({0}) should equal 1/cos({0})")
     @DisplayName("Sec function should equal 1/cos(x)")
-    @MethodSource("nonZeroCosValues")
-    void testSecEqualsOneOverCos(double x) {
+    @CsvFileSource(resources = "/sec_non_zero_cos_values.csv", numLinesToSkip = 1)
+    void testSecEqualsOneOverCos(double x, String description) {
         double cosX = Math.cos(x);
         double secX = secFunction.calculate(x, EPSILON);
 
@@ -153,25 +112,19 @@ class SecFunctionTest {
 
     @ParameterizedTest(name = "Sec({0}) should never be in (-1, 1)")
     @DisplayName("Sec function should have range (-∞, -1] ∪ [1, ∞)")
-    @MethodSource("nonZeroCosValues")
-    void testSecRange(double x) {
+    @CsvFileSource(resources = "/sec_non_zero_cos_values.csv", numLinesToSkip = 1)
+    void testSecRange(double x, String description) {
         double result = secFunction.calculate(x, EPSILON);
         assertTrue(result <= -1.0 || result >= 1.0,
                 "Sec(" + x + ") = " + result + " should be outside (-1, 1)");
     }
 
-    static Stream<Arguments> specialSecValues() {
-        return Stream.of(
-                Arguments.of(0.0, 1.0, "Sec(0) should be 1"),
-                Arguments.of(MathUtils.PI, -1.0, "Sec(π) should be -1"),
-                Arguments.of(2 * MathUtils.PI, 1.0, "Sec(2π) should be 1"));
-    }
-
     @ParameterizedTest(name = "Sec({0}) should be {1}")
     @DisplayName("Sec function should calculate correctly for special angles")
-    @MethodSource("specialSecValues")
-    void testSecSpecialValues(double angle, double expected, String message) {
-        assertEquals(expected, secFunction.calculate(angle, EPSILON), EPSILON, message);
+    @CsvFileSource(resources = "/sec_special_values.csv", numLinesToSkip = 1)
+    void testSecSpecialValues(double angle, double expected, String description) {
+        assertEquals(expected, secFunction.calculate(angle, EPSILON), EPSILON,
+                "Sec(" + description + ") should be " + expected);
     }
 
     @Test
@@ -188,49 +141,37 @@ class SecFunctionTest {
                 "Sec function should have period 2π");
     }
 
-    @Test
+    @ParameterizedTest(name = "Derivative of sec({0}) should be sec({0})tan({0})")
     @DisplayName("Derivative of sec(x) should be sec(x)tan(x)")
-    void testSecDerivative() {
+    @CsvFileSource(resources = "/sec_derivative_test_points.csv", numLinesToSkip = 1)
+    void testSecDerivative(double x, String description) {
         SecFunctionInterface derivative = secFunction.getDerivative();
 
-        // Test at several points
-        double[] testPoints = { 0.0, MathUtils.PI / 4, MathUtils.PI / 3, 2 * MathUtils.PI / 3, MathUtils.PI };
+        double derivativeValue = derivative.calculate(x, EPSILON);
 
-        for (double x : testPoints) {
-            double derivativeValue = derivative.calculate(x, EPSILON);
+        // Calculate expected value: sec(x)tan(x) = sin(x)/cos²(x)
+        double sinX = Math.sin(x);
+        double cosX = Math.cos(x);
+        double expectedValue = sinX / (cosX * cosX);
 
-            // Calculate expected value: sec(x)tan(x) = sin(x)/cos²(x)
-            double sinX = Math.sin(x);
-            double cosX = Math.cos(x);
-            double expectedValue = sinX / (cosX * cosX);
-
-            // Use a larger epsilon for derivative tests due to compound calculation errors
-            double derivativeEpsilon = 1e-5;
-            assertEquals(expectedValue, derivativeValue, derivativeEpsilon,
-                    "Derivative of sec(" + x + ") should be sec(" + x + ")tan(" + x + ")");
-        }
+        // Use a larger epsilon for derivative tests due to compound calculation errors
+        double derivativeEpsilon = 1e-5;
+        assertEquals(expectedValue, derivativeValue, derivativeEpsilon,
+                "Derivative of sec(" + x + ") should be sec(" + x + ")tan(" + x + ")");
     }
 
-    @Test
+    @ParameterizedTest(name = "Sec function should throw exception for values close to singularities: {1}")
     @DisplayName("Sec function should throw exception for values close to odd multiples of π/2")
-    void testSecThrowsExceptionNearSingularities() {
-        double[] nearSingularities = {
-                MathUtils.HALF_PI - 1e-10,
-                MathUtils.HALF_PI + 1e-10,
-                3 * MathUtils.HALF_PI - 1e-10,
-                3 * MathUtils.HALF_PI + 1e-10
-        };
-
-        for (double x : nearSingularities) {
-            assertThrows(IllegalArgumentException.class, () -> secFunction.calculate(x, EPSILON),
-                    "Sec(" + x + ") should throw IllegalArgumentException");
-        }
+    @CsvFileSource(resources = "/sec_near_singularities.csv", numLinesToSkip = 1)
+    void testSecThrowsExceptionNearSingularities(double x, String description) {
+        assertThrows(IllegalArgumentException.class, () -> secFunction.calculate(x, EPSILON),
+                "Sec(" + x + ") should throw IllegalArgumentException");
     }
 
-    @ParameterizedTest(name = "Sec should approach infinity as x approaches {0}")
+    @ParameterizedTest(name = "Sec should approach infinity as x approaches singularities with delta={0}")
     @DisplayName("Sec function should approach infinity near singularities")
-    @ValueSource(doubles = { 0.001, 0.01, 0.1 })
-    void testSecApproachesInfinityNearSingularities(double delta) {
+    @CsvFileSource(resources = "/sec_infinity_approach_deltas.csv", numLinesToSkip = 1)
+    void testSecApproachesInfinityNearSingularities(double delta, String description) {
         // Test approaching π/2 from below
         double valueNearHalfPiBelow = secFunction.calculate(MathUtils.HALF_PI - delta, EPSILON);
         assertTrue(Math.abs(valueNearHalfPiBelow) > 10.0,
