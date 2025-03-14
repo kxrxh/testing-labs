@@ -45,7 +45,7 @@ public class BottomUpIntegrationTest {
     @DisplayName("Phase 1: Base sin function integration test")
     @CsvFileSource(resources = "/sin_test_data.csv", numLinesToSkip = 1)
     void testSinBase(double angle, double expected) {
-        // Using real implementation
+
         SinFunction sinFunction = new SinFunction();
         double result = sinFunction.calculate(angle, EPSILON);
         assertEquals(expected, result, EPSILON, "Sin(" + angle + ") should be " + expected);
@@ -59,7 +59,7 @@ public class BottomUpIntegrationTest {
     @DisplayName("Phase 1: Base ln function integration test")
     @CsvFileSource(resources = "/ln_test_data.csv", numLinesToSkip = 1)
     void testLnBase(double value, double expected) {
-        // Using real implementation
+
         LnFunction lnFunction = new LnFunction();
         double result = lnFunction.calculate(value, EPSILON);
         assertEquals(expected, result, EPSILON, "Ln(" + value + ") should be " + expected);
@@ -72,7 +72,7 @@ public class BottomUpIntegrationTest {
     @DisplayName("Phase 2: Trigonometric derivatives - cos function integration test")
     @CsvFileSource(resources = "/cos_test_data.csv", numLinesToSkip = 1)
     void testCosDerivation(double angle, double expected) {
-        // Use real implementation of sin and cos
+
         SinFunction sinFunction = new SinFunction();
         CosFunction cosFunction = new CosFunction(sinFunction);
 
@@ -88,12 +88,11 @@ public class BottomUpIntegrationTest {
     @DisplayName("Phase 2: Trigonometric derivatives - sec function integration test")
     @CsvFileSource(resources = "/sec_test_data.csv", numLinesToSkip = 1)
     void testSecDerivation(double angle, double expected) {
-        // Use real implementations for sin, cos, and sec
+
         SinFunction sinFunction = new SinFunction();
         CosFunction cosFunction = new CosFunction(sinFunction);
         SecFunction secFunction = new SecFunction(cosFunction);
 
-        // Skip angles where sec is undefined
         if (Math.abs(Math.cos(angle)) < EPSILON) {
             assertThrows(IllegalArgumentException.class, () -> secFunction.calculate(angle, EPSILON),
                     "Sec(" + angle + ") should throw an exception at singularity");
@@ -110,11 +109,10 @@ public class BottomUpIntegrationTest {
     @DisplayName("Phase 2: Trigonometric derivatives - csc function integration test")
     @CsvFileSource(resources = "/csc_test_data.csv", numLinesToSkip = 1)
     void testCscDerivation(double angle, double expected) {
-        // Use real implementations
+
         SinFunction sinFunction = new SinFunction();
         CscFunction cscFunction = new CscFunction(sinFunction);
 
-        // Skip angles where csc is undefined
         if (Math.abs(Math.sin(angle)) < EPSILON) {
             assertThrows(IllegalArgumentException.class, () -> cscFunction.calculate(angle, EPSILON),
                     "Csc(" + angle + ") should throw an exception at singularity");
@@ -131,7 +129,7 @@ public class BottomUpIntegrationTest {
     @DisplayName("Phase 3: Logarithmic derivatives - log2 function integration test")
     @CsvFileSource(resources = "/log2_test_data.csv", numLinesToSkip = 1)
     void testLog2Derivation(double value, double expected) {
-        // Use real implementations
+
         LnFunction lnFunction = new LnFunction();
         Log2Function log2Function = new Log2Function(lnFunction);
 
@@ -146,7 +144,7 @@ public class BottomUpIntegrationTest {
     @DisplayName("Phase 3: Logarithmic derivatives - log10 function integration test")
     @CsvFileSource(resources = "/log10_test_data.csv", numLinesToSkip = 1)
     void testLog10Derivation(double value, double expected) {
-        // Use real implementations
+
         LnFunction lnFunction = new LnFunction();
         Log10Function log10Function = new Log10Function(lnFunction);
 
@@ -161,7 +159,7 @@ public class BottomUpIntegrationTest {
     @DisplayName("Phase 3: Logarithmic derivatives - log5 function integration test")
     @CsvFileSource(resources = "/log5_test_data.csv", numLinesToSkip = 1)
     void testLog5Derivation(double value, double expected) {
-        // Use real implementations
+
         LnFunction lnFunction = new LnFunction();
         Log5Function log5Function = new Log5Function(lnFunction);
 
@@ -176,36 +174,29 @@ public class BottomUpIntegrationTest {
     @DisplayName("Phase 4: Negative domain function integration test")
     @CsvFileSource(resources = "/negative_domain_test_cases.csv", numLinesToSkip = 1)
     void testNegativeDomainIntegration(double x, double sin, double cos, double sec, double csc, double expected) {
-        // Skip test cases outside domain
+
         if (x >= 0 || Math.abs(Math.cos(x)) < EPSILON || Math.abs(Math.sin(x)) < EPSILON) {
-            return; // Skip test cases that would cause domain errors
+            return;
         }
 
-        // Create mocks for precise control of trigonometric function outputs
         SinFunction sinMock = Mockito.mock(SinFunction.class);
         CosFunction cosMock = Mockito.mock(CosFunction.class);
         SecFunction secMock = Mockito.mock(SecFunction.class);
         CscFunction cscMock = Mockito.mock(CscFunction.class);
 
-        // Configure mocks with values from CSV
         when(sinMock.calculate(eq(x), anyDouble())).thenReturn(sin);
         when(cosMock.calculate(eq(x), anyDouble())).thenReturn(cos);
         when(secMock.calculate(eq(x), anyDouble())).thenReturn(sec);
         when(cscMock.calculate(eq(x), anyDouble())).thenReturn(csc);
 
-        // Fix: Add domain checks for mocks
         when(sinMock.isInDomain(eq(x))).thenReturn(true);
         when(cosMock.isInDomain(eq(x))).thenReturn(true);
         when(secMock.isInDomain(eq(x))).thenReturn(true);
         when(cscMock.isInDomain(eq(x))).thenReturn(true);
 
-        // Use real implementation of the NegativeDomainFunction with mocked
-        // dependencies
         NegativeDomainFunction negativeDomainFunction = new NegativeDomainFunction(
                 sinMock, cosMock, secMock, cscMock);
 
-        // Calculate expected result using the formula from NegativeDomainFunction
-        // Formula: (((((sec(x) * csc(x)) / cos(x)) - sec(x)) ^ 2) - sin(x))
         double secTimesCsc = sec * csc;
         double secTimesCscDividedByCos = secTimesCsc / cos;
         double secTimesCscDividedByCosMinusSec = secTimesCscDividedByCos - sec;
@@ -224,32 +215,26 @@ public class BottomUpIntegrationTest {
     @DisplayName("Phase 4: Positive domain function integration test")
     @CsvFileSource(resources = "/positive_domain_test_cases.csv", numLinesToSkip = 1)
     void testPositiveDomainIntegration(double x, double log2, double log10, double log5, double expected) {
-        // Skip test cases where domain is problematic
+
         if (x <= 0) {
-            return; // Skip non-positive values which are outside domain
+            return;
         }
 
-        // Create mocks for logarithmic functions
         Log2Function log2Mock = Mockito.mock(Log2Function.class);
         Log10Function log10Mock = Mockito.mock(Log10Function.class);
         Log5Function log5Mock = Mockito.mock(Log5Function.class);
 
-        // Configure mocks with values from CSV
         when(log2Mock.calculate(eq(x), anyDouble())).thenReturn(log2);
         when(log10Mock.calculate(eq(x), anyDouble())).thenReturn(log10);
         when(log5Mock.calculate(eq(x), anyDouble())).thenReturn(log5);
 
-        // Fix: Add domain checks for mocks
         when(log2Mock.isInDomain(eq(x))).thenReturn(true);
         when(log10Mock.isInDomain(eq(x))).thenReturn(true);
         when(log5Mock.isInDomain(eq(x))).thenReturn(true);
 
-        // Use real implementation with mocked dependencies
         PositiveDomainFunction positiveDomainFunction = new PositiveDomainFunction(
                 log2Mock, log10Mock, log5Mock);
 
-        // Calculate expected result using the formula from PositiveDomainFunction
-        // Formula: (((((log_2(x) + log_10(x)) ^ 2) - log_2(x)) - log_10(x)) - log_5(x))
         double log2PlusLog10 = log2 + log10;
         double squared = log2PlusLog10 * log2PlusLog10;
         double squaredMinusLog2 = squared - log2;
@@ -268,7 +253,7 @@ public class BottomUpIntegrationTest {
     @Test
     @DisplayName("Phase 5: Full system function integration test")
     void testFullSystemIntegration() {
-        // Use real implementations for everything
+
         SinFunction sinFunction = new SinFunction();
         CosFunction cosFunction = new CosFunction(sinFunction);
         SecFunction secFunction = new SecFunction(cosFunction);
@@ -288,17 +273,14 @@ public class BottomUpIntegrationTest {
         SystemFunction systemFunction = new SystemFunction(
                 negativeDomainFunction, positiveDomainFunction);
 
-        // Test negative domain
         double xNeg = -0.3;
         double resultNeg = systemFunction.calculate(xNeg, EPSILON);
         assertTrue(Double.isFinite(resultNeg), "Result should be finite for x = " + xNeg);
 
-        // Test positive domain
         double xPos = 2.0;
         double resultPos = systemFunction.calculate(xPos, EPSILON);
         assertTrue(Double.isFinite(resultPos), "Result should be finite for x = " + xPos);
 
-        // Test domain boundaries
         assertFalse(systemFunction.isInDomain(0.0), "x = 0 should not be in the domain");
         assertFalse(systemFunction.isInDomain(-Math.PI / 2), "x = -π/2 should not be in the domain");
 
@@ -339,20 +321,17 @@ public class BottomUpIntegrationTest {
     @Test
     @DisplayName("Phase 6: Mixed integration with partial mocking")
     void testMixedIntegrationWithPartialMocks() throws IOException {
-        // Real trigonometric implementations
+
         SinFunction sinFunction = new SinFunction();
         CosFunction cosFunction = new CosFunction(sinFunction);
         SecFunction secFunction = new SecFunction(cosFunction);
         CscFunction cscFunction = new CscFunction(sinFunction);
 
-        // Real NegativeDomainFunction
         NegativeDomainFunction negativeDomainFunction = new NegativeDomainFunction(
                 sinFunction, cosFunction, secFunction, cscFunction);
 
-        // Mock logarithmic function
         LnFunction lnMock = Mockito.mock(LnFunction.class);
 
-        // Read test data from CSV using ClassLoader to find the resource
         String resourcePath = "/positive_domain_test_cases.csv";
         java.net.URL resourceUrl = getClass().getResource(resourcePath);
         if (resourceUrl == null) {
@@ -370,34 +349,29 @@ public class BottomUpIntegrationTest {
             if (parts.length >= 5) {
                 try {
                     double x = Double.parseDouble(parts[0]);
-                    // Configure ln mock to return values that would produce the expected
-                    // log2/log10/log5
+
                     when(lnMock.calculate(eq(x), anyDouble())).thenReturn(Math.log(x));
                     when(lnMock.isInDomain(eq(x))).thenReturn(true);
                 } catch (NumberFormatException e) {
-                    // Skip malformed data lines
+
                     System.err.println("Skipping malformed data line: " + line);
                 }
             }
         }
 
-        // Create higher-level functions with the mocked ln
         Log2Function log2Function = new Log2Function(lnMock);
         Log10Function log10Function = new Log10Function(lnMock);
         Log5Function log5Function = new Log5Function(lnMock);
 
-        // Real PositiveDomainFunction with mocked dependencies
         PositiveDomainFunction positiveDomainFunction = new PositiveDomainFunction(
                 log2Function, log10Function, log5Function);
 
-        // Real SystemFunction with mixed dependencies
         SystemFunction mixedSystem = new SystemFunction(
                 negativeDomainFunction, positiveDomainFunction);
 
         double negValue = -0.3;
         double posValue = 2.0;
 
-        // Skip test assertions if values are outside domain
         if (mixedSystem.isInDomain(negValue)) {
             double negResult = mixedSystem.calculate(negValue, EPSILON);
             assertTrue(Double.isFinite(negResult),
@@ -417,7 +391,7 @@ public class BottomUpIntegrationTest {
     @Test
     @DisplayName("Test edge cases around domain boundaries")
     void testEdgeCases() {
-        // Use real implementations for all components
+
         SinFunction sinFunction = new SinFunction();
         CosFunction cosFunction = new CosFunction(sinFunction);
         SecFunction secFunction = new SecFunction(cosFunction);
@@ -472,7 +446,7 @@ public class BottomUpIntegrationTest {
     @Test
     @DisplayName("Test system function with extreme values")
     void testExtremeValues() {
-        // Use real implementations
+
         SinFunction sinFunction = new SinFunction();
         CosFunction cosFunction = new CosFunction(sinFunction);
         SecFunction secFunction = new SecFunction(cosFunction);

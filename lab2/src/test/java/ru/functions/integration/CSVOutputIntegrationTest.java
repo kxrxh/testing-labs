@@ -1,6 +1,5 @@
 package ru.functions.integration;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -55,7 +54,7 @@ class CSVOutputIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // Initialize mock and CSV writer
+
         mockSystemFunction = Mockito.mock(SystemFunctionInterface.class);
         when(mockSystemFunction.isInDomain(0.0)).thenReturn(false);
         csvWriter = new CSVWriter(CSV_SEPARATOR);
@@ -77,7 +76,7 @@ class CSVOutputIntegrationTest {
     }
 
     private void initializeRealSystemFunction() {
-        // Create real implementations
+
         SinFunction sinFunction = new SinFunction();
         CosFunction cosFunction = new CosFunction(sinFunction);
         SecFunction secFunction = new SecFunction(cosFunction);
@@ -121,7 +120,6 @@ class CSVOutputIntegrationTest {
                 new InputStreamReader(
                         getClass().getResourceAsStream("/mock_negative_domain.csv")))) {
 
-            // Skip header
             reader.readLine();
 
             String line;
@@ -147,7 +145,6 @@ class CSVOutputIntegrationTest {
                 new InputStreamReader(
                         getClass().getResourceAsStream("/mock_positive_domain.csv")))) {
 
-            // Skip header
             reader.readLine();
 
             String line;
@@ -172,54 +169,45 @@ class CSVOutputIntegrationTest {
         @Test
         @DisplayName("Should correctly write negative domain values")
         void testCSVWriterForNegativeDomain() throws IOException {
-            // Setup
+
             configureMockWithNegativeDomainValues();
             double start = -0.5;
             double end = -0.1;
             double step = 0.1;
 
-            // Special case: Explicitly ensure -0.2 is mocked with specific value
-            // This is critical as it's failing in the test
             when(mockSystemFunction.isInDomain(eq(-0.2))).thenReturn(true);
             when(mockSystemFunction.calculate(eq(-0.2), anyDouble())).thenReturn(0.85);
 
-            // Also mock the intermediate points with more precision
             when(mockSystemFunction.isInDomain(eq(-0.4))).thenReturn(true);
             when(mockSystemFunction.calculate(eq(-0.4), anyDouble())).thenReturn(0.7);
             when(mockSystemFunction.isInDomain(eq(-0.3))).thenReturn(true);
             when(mockSystemFunction.calculate(eq(-0.3), anyDouble())).thenReturn(0.8);
 
-            // Ensure end point is mocked
             when(mockSystemFunction.isInDomain(eq(end))).thenReturn(true);
             when(mockSystemFunction.calculate(eq(end), anyDouble())).thenReturn(1.01);
 
             File outputFile = new File(tempDir.toFile(), "negative_domain_output.csv");
 
-            // Execute
             csvWriter.writeFunction(mockSystemFunction, start, end, step, outputFile.getAbsolutePath());
 
-            // Verify file exists and has content
             assertTrue(outputFile.exists(), "CSV file should be created");
             List<String> lines = readCSVFile(outputFile);
             assertTrue(lines.size() > 1, "CSV should have at least header and one data line");
             assertEquals("X,F(X)", lines.get(0), "CSV header should be correct");
 
-            // Debug output to see actual points in the CSV
             System.out.println("Debug: CSV Points in negative domain test:");
             for (int i = 1; i < lines.size(); i++) {
                 System.out.println("  " + lines.get(i));
             }
 
-            // Check for the important points
             assertContainsPoint(lines, start);
             assertContainsPoint(lines, end);
 
-            // Special handling for -0.2 with relaxed precision
             boolean found = false;
             for (int i = 1; i < lines.size(); i++) {
                 String[] parts = lines.get(i).split(CSV_SEPARATOR);
                 double x = Double.parseDouble(parts[0]);
-                if (Math.abs(x - (-0.2)) < 0.005) { // More relaxed tolerance
+                if (Math.abs(x - (-0.2)) < 0.005) {
                     found = true;
                     double y = Double.parseDouble(parts[1]);
                     assertEquals(0.85, y, DELTA, "Y value should match expected for x ≈ -0.2");
@@ -232,7 +220,7 @@ class CSVOutputIntegrationTest {
         @Test
         @DisplayName("Should correctly write positive domain values")
         void testCSVWriterForPositiveDomain() throws IOException {
-            // Setup
+
             configureMockWithPositiveDomainValues();
             double start = 0.1;
             double end = 0.5;
@@ -240,16 +228,13 @@ class CSVOutputIntegrationTest {
 
             File outputFile = new File(tempDir.toFile(), "positive_domain_output.csv");
 
-            // Execute
             csvWriter.writeFunction(mockSystemFunction, start, end, step, outputFile.getAbsolutePath());
 
-            // Verify
             assertTrue(outputFile.exists(), "CSV file should be created");
             List<String> lines = readCSVFile(outputFile);
             assertTrue(lines.size() > 1, "CSV should have at least header and one data line");
             assertEquals("X,F(X)", lines.get(0), "CSV header should be correct");
 
-            // Check for start and end points
             assertContainsPoint(lines, start);
             assertContainsPoint(lines, end);
         }
@@ -278,36 +263,29 @@ class CSVOutputIntegrationTest {
         @Test
         @DisplayName("Should handle different step sizes correctly")
         void testCSVWriterWithDifferentStepSizes() throws IOException {
-            // Small step test
+
             double smallStep = 0.01;
             double smallStart = 0.1;
             double smallEnd = 0.15;
 
-            // Mock setup for small step
             setupMocksForRange(smallStart, smallEnd, smallStep);
             File smallStepFile = new File(tempDir.toFile(), "small_step_output.csv");
 
-            // Execute
             csvWriter.writeFunction(mockSystemFunction, smallStart, smallEnd, smallStep,
                     smallStepFile.getAbsolutePath());
 
-            // Verify
             verifyOutputFile(smallStepFile, smallStart, smallEnd);
 
-            // Large step test
             double largeStep = 0.5;
             double largeStart = 0.1;
             double largeEnd = 2.1;
 
-            // Mock setup for large step
             setupMocksForRange(largeStart, largeEnd, largeStep);
             File largeStepFile = new File(tempDir.toFile(), "large_step_output.csv");
 
-            // Execute
             csvWriter.writeFunction(mockSystemFunction, largeStart, largeEnd, largeStep,
                     largeStepFile.getAbsolutePath());
 
-            // Verify
             verifyOutputFile(largeStepFile, largeStart, largeEnd);
         }
 
@@ -315,9 +293,9 @@ class CSVOutputIntegrationTest {
             for (double x = start; x <= end + EPSILON; x += step) {
                 when(mockSystemFunction.isInDomain(eq(x))).thenReturn(true);
                 when(mockSystemFunction.calculate(eq(x), anyDouble()))
-                        .thenReturn(0.3 + (x - start)); // Simple linear function for mock
+                        .thenReturn(0.3 + (x - start));
             }
-            // Also mock the exact end point
+
             when(mockSystemFunction.isInDomain(eq(end))).thenReturn(true);
             when(mockSystemFunction.calculate(eq(end), anyDouble()))
                     .thenReturn(0.3 + (end - start));
@@ -329,7 +307,6 @@ class CSVOutputIntegrationTest {
             assertTrue(lines.size() > 1, "CSV should have at least header and one data line");
             assertEquals("X,F(X)", lines.get(0), "CSV header should be correct");
 
-            // Check for start and end points
             assertContainsPoint(lines, start);
             assertContainsPoint(lines, end);
         }
@@ -342,7 +319,7 @@ class CSVOutputIntegrationTest {
         @Test
         @DisplayName("Should integrate with real system function")
         void testCSVWriterWithRealSystemFunction() throws IOException {
-            // Test negative domain
+
             double negStart = -0.5;
             double negEnd = -0.1;
             double step = 0.1;
@@ -353,7 +330,6 @@ class CSVOutputIntegrationTest {
             assertTrue(negFile.exists(), "CSV file for negative domain should be created");
             verifyFunctionValueFiniteness(negFile);
 
-            // Test positive domain
             double posStart = 0.1;
             double posEnd = 2.0;
 
@@ -369,7 +345,6 @@ class CSVOutputIntegrationTest {
             assertTrue(lines.size() > 1, "CSV should have at least header and one data line");
             assertEquals("X,F(X)", lines.get(0), "CSV header should be correct");
 
-            // Check that all function values are finite
             for (int i = 1; i < lines.size(); i++) {
                 String[] parts = lines.get(i).split(CSV_SEPARATOR);
                 double x = Double.parseDouble(parts[0]);

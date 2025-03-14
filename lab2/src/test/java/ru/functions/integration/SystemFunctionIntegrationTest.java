@@ -39,18 +39,14 @@ public class SystemFunctionIntegrationTest {
 
         @BeforeEach
         void setUp() throws IOException {
-                // Phase 1: Configure mock objects for lowest level components from the test
-                // data
+
                 NegativeDomainFunction mockNegativeDomain = Mockito.mock(NegativeDomainFunction.class);
                 PositiveDomainFunction mockPositiveDomain = Mockito.mock(PositiveDomainFunction.class);
 
-                // Configure mocks with test data from CSV
                 configureSystemMocks(mockNegativeDomain, mockPositiveDomain);
 
-                // Create the system function with the mocked dependencies
                 systemFunction = new SystemFunction(mockNegativeDomain, mockPositiveDomain);
 
-                // Initialize the real implementations for later test phases
                 initializeRealImplementations();
         }
 
@@ -60,7 +56,6 @@ public class SystemFunctionIntegrationTest {
                 Path testDataPath = Paths.get(getClass().getResource(resourcePath).getPath());
                 List<String> lines = Files.readAllLines(testDataPath);
 
-                // Skip header
                 for (int i = 1; i < lines.size(); i++) {
                         String line = lines.get(i);
                         if (line.trim().isEmpty())
@@ -71,31 +66,27 @@ public class SystemFunctionIntegrationTest {
                         double expected = Double.parseDouble(parts[1]);
 
                         if (x < 0) {
-                                // Configure negative domain function - CORRECT DOMAIN LOGIC
+
                                 when(negMock.isInDomain(eq(x))).thenReturn(true);
                                 when(negMock.calculate(eq(x), anyDouble())).thenReturn(expected);
-                                // Set isInDomain for system function delegation
+
                                 when(posMock.isInDomain(eq(x))).thenReturn(false);
                         } else {
-                                // Configure positive domain function
+
                                 when(posMock.isInDomain(eq(x))).thenReturn(true);
                                 when(posMock.calculate(eq(x), anyDouble())).thenReturn(expected);
-                                // Set isInDomain for system function delegation
+
                                 when(negMock.isInDomain(eq(x))).thenReturn(false);
                         }
                 }
 
-                // Configure domain boundary conditions - FIX DOMAINS
                 when(negMock.isInDomain(0.0)).thenReturn(false);
                 when(posMock.isInDomain(0.0)).thenReturn(false);
 
-                // FIX: Make sure these special values are properly handled
-                // For x = -Math.PI / 2 (singularity for sec)
                 when(negMock.isInDomain(eq(-Math.PI / 2))).thenReturn(false);
-                // For x = -Math.PI (singularity for csc)
+
                 when(negMock.isInDomain(eq(-Math.PI))).thenReturn(false);
 
-                // These values should be in domain
                 when(negMock.isInDomain(eq(-0.3))).thenReturn(true);
                 when(negMock.isInDomain(eq(-0.7))).thenReturn(true);
                 when(negMock.isInDomain(eq(-0.0001))).thenReturn(true);
@@ -105,7 +96,7 @@ public class SystemFunctionIntegrationTest {
         }
 
         private void initializeRealImplementations() {
-                // Setup actual implementations for later test phases
+
                 SinFunction sinFunction = new SinFunction();
                 CosFunction cosFunction = new CosFunction(sinFunction);
                 SecFunction secFunction = new SecFunction(cosFunction);
@@ -130,9 +121,9 @@ public class SystemFunctionIntegrationTest {
                 assertTrue(systemFunction.isInDomain(-0.7));
                 assertTrue(systemFunction.isInDomain(1.0));
                 assertTrue(systemFunction.isInDomain(10.0));
-                assertFalse(systemFunction.isInDomain(0.0)); // x = 0 is not in domain
-                assertFalse(systemFunction.isInDomain(-Math.PI / 2)); // Singularity for sec
-                assertFalse(systemFunction.isInDomain(-Math.PI)); // Singularity for csc
+                assertFalse(systemFunction.isInDomain(0.0));
+                assertFalse(systemFunction.isInDomain(-Math.PI / 2));
+                assertFalse(systemFunction.isInDomain(-Math.PI));
         }
 
         @ParameterizedTest
@@ -155,15 +146,13 @@ public class SystemFunctionIntegrationTest {
         void testNegativeDomainCalculation() {
                 double x = -0.3;
 
-                // Create SystemFunction with real NegativeDomainFunction but mocked
-                // PositiveDomainFunction
                 PositiveDomainFunction mockPositiveDomain = Mockito.mock(PositiveDomainFunction.class);
                 SystemFunction partialSystem = new SystemFunction(negativeDomainFunction, mockPositiveDomain);
 
                 assertTrue(partialSystem.isInDomain(x), "System function should be defined at x = " + x);
 
                 double result = partialSystem.calculate(x, EPSILON);
-                // We don't assert exact values since real implementation might differ slightly
+
                 assertTrue(Double.isFinite(result), "Result should be finite for x = " + x);
         }
 
@@ -172,25 +161,22 @@ public class SystemFunctionIntegrationTest {
         void testPositiveDomainCalculation() {
                 double x = 2.0;
 
-                // Create SystemFunction with mocked NegativeDomainFunction but real
-                // PositiveDomainFunction
                 NegativeDomainFunction mockNegativeDomain = Mockito.mock(NegativeDomainFunction.class);
                 SystemFunction partialSystem = new SystemFunction(mockNegativeDomain, positiveDomainFunction);
 
-                // Configure necessary mock behavior
                 when(mockNegativeDomain.isInDomain(x)).thenReturn(false);
 
                 assertTrue(partialSystem.isInDomain(x), "System function should be defined at x = " + x);
 
                 double result = partialSystem.calculate(x, EPSILON);
-                // We don't assert exact values since real implementation might differ slightly
+
                 assertTrue(Double.isFinite(result), "Result should be finite for x = " + x);
         }
 
         @Test
         @DisplayName("Phase 3: Test system function with fully integrated implementations")
         void testSystemFunctionAtBoundaries() {
-                // Create fully integrated system with real implementations
+
                 SystemFunction fullSystem = new SystemFunction(negativeDomainFunction, positiveDomainFunction);
 
                 double negativeClose = -0.0001;
@@ -209,7 +195,6 @@ public class SystemFunctionIntegrationTest {
                 assertTrue(Double.isFinite(positiveResult),
                                 "Result for x = " + positiveClose + " should be finite");
 
-                // Test specific values with the fully integrated system
                 double[] testValues = { -0.5, -0.1, 0.1, 0.5, 1.0, 2.0, 5.0 };
                 for (double value : testValues) {
                         if (fullSystem.isInDomain(value)) {
