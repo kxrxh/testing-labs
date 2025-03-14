@@ -5,7 +5,7 @@ package ru.functions.utils;
  */
 public class MathUtils {
     // Constants
-    public static final double PI = 3.14159265358979323846;
+    public static final double PI = Math.PI;
     public static final double HALF_PI = PI / 2;
     public static final double TWO_PI = 2 * PI;
 

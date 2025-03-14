@@ -29,7 +29,7 @@ public class CosFunction implements CosFunctionInterface {
 
     @Override
     public boolean isInDomain(double x) {
-        return true;
+        return !Double.isInfinite(x) && !Double.isNaN(x);
     }
 
     @Override

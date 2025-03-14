@@ -6,7 +6,7 @@ import ru.functions.utils.MathUtils;
  * Implementation of sine function using Taylor series expansion
  */
 public class SinFunction implements SinFunctionInterface {
-
+    
     @Override
     public double calculate(double x, double epsilon) throws IllegalArgumentException {
         if (!isInDomain(x)) {
